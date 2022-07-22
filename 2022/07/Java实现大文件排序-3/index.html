@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
 
 
 
@@ -460,282 +462,286 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="大文件排序-网络链接与网络流"><a href="#大文件排序-网络链接与网络流" class="headerlink" title="大文件排序 (网络链接与网络流)"></a>大文件排序 (网络链接与网络流)</h1><p>由于测试条件有限，故将网络流的收发与切分的写入相分离，这种做法大大增加了IO量，降低了效率。<br>实际操作时建议将两者耦合（或者用传递数据通道的方法避免过耦合）</p>
+                <h1 id="大文件排序-网络链接与网络流"><a class="markdownIt-Anchor" href="#大文件排序-网络链接与网络流"></a> 大文件排序 （网络链接与网络流）</h1>
+<p>由于测试条件有限，故将网络流的收发与切分的写入相分离，这种做法大大增加了IO量，降低了效率。<br />
+实际操作时建议将两者耦合（或者用传递数据通道的方法避免过耦合）</p>
 <p>与此同时，这一部分是没有经过测试的，请仅作参考</p>
-<h2 id="网络链接"><a href="#网络链接" class="headerlink" title="网络链接"></a>网络链接</h2><hr>
+<h2 id="网络链接"><a class="markdownIt-Anchor" href="#网络链接"></a> 网络链接</h2>
+<hr />
 <p>首先用 <code>NetConnect</code>建立网络链接，通过并发线程获取主机与发送线程，得到网络链接列表</p>
-<h3 id="NetConnect类"><a href="#NetConnect类" class="headerlink" title="NetConnect类"></a>NetConnect类</h3><pre><code class="java">//NetConnect.java
-public class NetConnect extends Process &#123;
-    final IP IPs;
-    final int IP_idx;
-    ServerSocket ServerSkt;//服务器套接字
-    final Socket[] ServerList;//收听列表
-    final Socket[] ClientList;//发送列表
+<h3 id="netconnect类"><a class="markdownIt-Anchor" href="#netconnect类"></a> NetConnect类</h3>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//NetConnect.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">NetConnect</span> <span class="token keyword">extends</span> <span class="token class-name">Process</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> IP <span class="token class-name">IPs</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token class-name">IP_idx</span><span class="token punctuation">;</span>
+    <span class="token class-name">ServerSocket</span> <span class="token class-name">ServerSkt</span><span class="token punctuation">;</span><span class="token comment">//服务器套接字</span>
+    <span class="token keyword">final</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ServerList</span><span class="token punctuation">;</span><span class="token comment">//收听列表</span>
+    <span class="token keyword">final</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ClientList</span><span class="token punctuation">;</span><span class="token comment">//发送列表</span>
 
-    NetConnect();//...
-    @Override void handle(ProcessSwitch ps);//...
-    void netConnect() &#123;
-        System.out.println(&quot;开始建立服务器&quot;);
-        for (int i = 0; i &lt; IPs.IP_num; i++) &#123;
-            THR.ExecWait();
-            //并发监听客户端申请
-            THR.ThreadPool.execute(new ServerGetter(ServerSkt, ServerList, IPs.IP_address));
-        &#125;
-        THR.PoolWait();
-        System.out.println(&quot;服务器已建立，开始收听...&quot;);
-        System.out.println(&quot;输入0开始发送客户端请求&quot;);
-        try &#123;
-            while (true) &#123;
-                if (System.in.read() == &#39;0&#39;) break;
-            &#125;
-        &#125; catch (IOException e) &#123;
-            throw new RuntimeException(e);
-        &#125;
-        for (int i = 0; i &lt; IPs.IP_num; i++) &#123;
-            THR.ExecWait();
-            //并发发送客户端申请
-            THR.ThreadPool.execute(new ClientGetter(i, IPs.IP_address.get(i), ClientList));
-        &#125;
-        THR.PoolWait();
-        System.out.println(&quot;收听完毕！&quot;);
-    &#125;
-&#125;
-</code></pre>
+    <span class="token class-name">NetConnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span> <span class="token keyword">void</span> <span class="token function">handle</span><span class="token punctuation">(</span><span class="token class-name">ProcessSwitch</span> ps<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token keyword">void</span> <span class="token function">netConnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"开始建立服务器"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token class-name">IPs<span class="token punctuation">.</span>IP_num</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">THR<span class="token punctuation">.</span>ExecWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//并发监听客户端申请</span>
+            <span class="token class-name">THR<span class="token punctuation">.</span>ThreadPool</span><span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerGetter</span><span class="token punctuation">(</span><span class="token class-name">ServerSkt</span><span class="token punctuation">,</span> <span class="token class-name">ServerList</span><span class="token punctuation">,</span> <span class="token class-name">IPs<span class="token punctuation">.</span>IP_address</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token class-name">THR<span class="token punctuation">.</span>PoolWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"服务器已建立，开始收听..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"输入0开始发送客户端请求"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token char">'0'</span><span class="token punctuation">)</span> <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token class-name">IPs<span class="token punctuation">.</span>IP_num</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">THR<span class="token punctuation">.</span>ExecWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//并发发送客户端申请</span>
+            <span class="token class-name">THR<span class="token punctuation">.</span>ThreadPool</span><span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ClientGetter</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> <span class="token class-name">IPs<span class="token punctuation">.</span>IP_address</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">ClientList</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token class-name">THR<span class="token punctuation">.</span>PoolWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"收听完毕！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>接着是用于获取套接字的任务类<code>ServerGetter</code>与<code>ClientGetter</code></p>
-<h3 id="ServerGetter类"><a href="#ServerGetter类" class="headerlink" title="ServerGetter类"></a>ServerGetter类</h3><pre><code class="java">//ServerGetter.java
-public class ServerGetter implements Runnable &#123;
-    final ArrayList&lt;String&gt; IP_address;
-    final Socket[] ServerList;
-    final ServerSocket ServerSkt;
+<h3 id="servergetter类"><a class="markdownIt-Anchor" href="#servergetter类"></a> ServerGetter类</h3>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//ServerGetter.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ServerGetter</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> <span class="token class-name">IP_address</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ServerList</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">ServerSocket</span> <span class="token class-name">ServerSkt</span><span class="token punctuation">;</span>
 
-    ServerGetter(ServerSocket ServerSkt, Socket[] ServerList, ArrayList&lt;String&gt; IP_address);//...
-    @Override
-    public void run() &#123;
-        try &#123;
-            Socket Skt = ServerSkt.accept();//监听客户端请求
-            String IPad = Skt.getLocalAddress().getHostAddress();
-            System.out.println(IPad);
-            //调整对应编号
-            for (int i = 0; i &lt; IP_address.size(); i++) &#123;
-                if (IPad.equals(IP_address.get(i))) &#123;
-                    ServerList[i] = Skt;
-                    System.out.println(i + &quot; 号主机已链接.&quot;);
-                    break;
-                &#125;
-            &#125;
-        &#125; catch (IOException e) &#123;
-            throw new RuntimeException(e);
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<h3 id="ClientGetter类"><a href="#ClientGetter类" class="headerlink" title="ClientGetter类"></a>ClientGetter类</h3><pre><code class="java">//ClientGetter.java
-public class ClientGetter implements Runnable &#123;
-    final int idx;
-    final String IP_address;
-    final Socket[] ClientList;
+    <span class="token class-name">ServerGetter</span><span class="token punctuation">(</span><span class="token class-name">ServerSocket</span> <span class="token class-name">ServerSkt</span><span class="token punctuation">,</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ServerList</span><span class="token punctuation">,</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> <span class="token class-name">IP_address</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">Socket</span> <span class="token class-name">Skt</span> <span class="token operator">=</span> <span class="token class-name">ServerSkt</span><span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//监听客户端请求</span>
+            <span class="token class-name">String</span> <span class="token class-name">IPad</span> <span class="token operator">=</span> <span class="token class-name">Skt</span><span class="token punctuation">.</span><span class="token function">getLocalAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHostAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">IPad</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//调整对应编号</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token class-name">IP_address</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">IPad</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token class-name">IP_address</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token class-name">ServerList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token class-name">Skt</span><span class="token punctuation">;</span>
+                    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token string">" 号主机已链接."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">break</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="clientgetter类"><a class="markdownIt-Anchor" href="#clientgetter类"></a> ClientGetter类</h3>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//ClientGetter.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ClientGetter</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token keyword">int</span> idx<span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token class-name">IP_address</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ClientList</span><span class="token punctuation">;</span>
 
-    ClientGetter(int idx, String IP_address, Socket[] ClientList);//...
-    @Override
-    public void run() &#123;
-        while (ClientList[idx] == null) &#123;
-            try &#123;
-                //持续发送客户端请求直到链接成功
-                ClientList[idx] = new Socket(IP_address, NET.PORT);
-            &#125; catch (IOException e) &#123;
-                throw new RuntimeException(e);
-            &#125;
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<h2 id="网络流"><a href="#网络流" class="headerlink" title="网络流"></a>网络流</h2><hr>
+    <span class="token class-name">ClientGetter</span><span class="token punctuation">(</span><span class="token keyword">int</span> idx<span class="token punctuation">,</span> <span class="token class-name">String</span> <span class="token class-name">IP_address</span><span class="token punctuation">,</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ClientList</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token class-name">ClientList</span><span class="token punctuation">[</span>idx<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+                <span class="token comment">//持续发送客户端请求直到链接成功</span>
+                <span class="token class-name">ClientList</span><span class="token punctuation">[</span>idx<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Socket</span><span class="token punctuation">(</span><span class="token class-name">IP_address</span><span class="token punctuation">,</span> NET<span class="token punctuation">.</span>PORT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="网络流"><a class="markdownIt-Anchor" href="#网络流"></a> 网络流</h2>
+<hr />
 <p>网络流传输，由于监听总线程类<code>ServerS</code>与发送总线程类<code>ClientS</code>直到主线程结束才结束，因此为其设置副线程池以供管理子线程</p>
-<pre><code class="java">//NetStream.java
-public class NetStream extends Process &#123;
-    final int IP_idx;
-    final File FOutput;//发送文件夹
-    final File FNet;//收听文件夹
-    final ServerSocket ServerSkt;
-    final Socket[] ServerList;
-    final Socket[] ClientList;
-    final ArrayList&lt;String&gt; IP_alpha;
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//NetStream.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">NetStream</span> <span class="token keyword">extends</span> <span class="token class-name">Process</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token class-name">IP_idx</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">File</span> <span class="token class-name">FOutput</span><span class="token punctuation">;</span><span class="token comment">//发送文件夹</span>
+    <span class="token keyword">final</span> <span class="token class-name">File</span> <span class="token class-name">FNet</span><span class="token punctuation">;</span><span class="token comment">//收听文件夹</span>
+    <span class="token keyword">final</span> <span class="token class-name">ServerSocket</span> <span class="token class-name">ServerSkt</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ServerList</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ClientList</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> <span class="token class-name">IP_alpha</span><span class="token punctuation">;</span>
 
-    NetStream(NetConnect Connection);//...
+    <span class="token class-name">NetStream</span><span class="token punctuation">(</span><span class="token class-name">NetConnect</span> <span class="token class-name">Connection</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
 
-    @Override void handle(ProcessSwitch ps);//...
+    <span class="token annotation punctuation">@Override</span> <span class="token keyword">void</span> <span class="token function">handle</span><span class="token punctuation">(</span><span class="token class-name">ProcessSwitch</span> ps<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
 
-    void netStream() &#123;
-        System.out.println(&quot;启动收听线程&quot;);
-        THR.ExecWait();
-        //启动收听总线程
-        THR.ThreadPool.execute(new ServerS(FNet, ServerList));
-        System.out.println(&quot;启动发送线程&quot;);
-        THR.ExecWait();
-        //启动发送总线程
-        THR.ThreadPool.execute(new ClientS(FOutput, ClientList));
-        System.out.println(&quot;线程启动完毕，开始传输...&quot;);
-        THR.PoolWait();
-        System.out.println(&quot;网络传输结束&quot;);
-        netClose();
-    &#125;
-    //关闭网络链接
-    private void netClose() &#123;
-        try &#123;
-            for (int i = 0; i &lt; IP_alpha.size(); i++) &#123;
-                if ((ServerList[i] != null) &amp;&amp; !ServerList[i].isClosed()) ServerList[i].close();
-                if ((ClientList[i] != null) &amp;&amp; !ClientList[i].isClosed()) ClientList[i].close();
-            &#125;
-            if ((ServerSkt != null) &amp;&amp; !ServerSkt.isClosed()) ServerSkt.close();
-        &#125; catch (IOException e) &#123;
-            throw new RuntimeException(e);
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<h3 id="监听总线程类ServerS"><a href="#监听总线程类ServerS" class="headerlink" title="监听总线程类ServerS"></a>监听总线程类ServerS</h3><pre><code class="java">//ServerS.java
-public class ServerS implements Runnable &#123;
-    static int act_num = 0;
-    final File FNet;
-    final Socket[] ServerList;
-    String IP_alpha;
+    <span class="token keyword">void</span> <span class="token function">netStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"启动收听线程"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">THR<span class="token punctuation">.</span>ExecWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//启动收听总线程</span>
+        <span class="token class-name">THR<span class="token punctuation">.</span>ThreadPool</span><span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ServerS</span><span class="token punctuation">(</span><span class="token class-name">FNet</span><span class="token punctuation">,</span> <span class="token class-name">ServerList</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"启动发送线程"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">THR<span class="token punctuation">.</span>ExecWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//启动发送总线程</span>
+        <span class="token class-name">THR<span class="token punctuation">.</span>ThreadPool</span><span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ClientS</span><span class="token punctuation">(</span><span class="token class-name">FOutput</span><span class="token punctuation">,</span> <span class="token class-name">ClientList</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程启动完毕，开始传输..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">THR<span class="token punctuation">.</span>PoolWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"网络传输结束"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">netClose</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">//关闭网络链接</span>
+    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">netClose</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ServerList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token class-name">ServerList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">isClosed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token class-name">ServerList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ClientList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token class-name">ClientList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">isClosed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token class-name">ClientList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ServerSkt</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token class-name">ServerSkt</span><span class="token punctuation">.</span><span class="token function">isClosed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token class-name">ServerSkt</span><span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="监听总线程类servers"><a class="markdownIt-Anchor" href="#监听总线程类servers"></a> 监听总线程类ServerS</h3>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//ServerS.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ServerS</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">static</span> <span class="token keyword">int</span> act_num <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">File</span> <span class="token class-name">FNet</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ServerList</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">;</span>
 
-    ServerS(File FNet, Socket[] ServerList);//,,,
-    @Override
-    public void run() &#123;
-        //获取本机字符串
-        IP_alpha = NET.IPs.IP_alpha.get(NET.IP_idx);
-        int alpha_num = IP_alpha.length();//本机字符串长度
-        int IP_num = NET.IPs.IP_alpha.size();//主机数量
-        FileOutputStream[] files = new FileOutputStream[alpha_num * CONST.ALPHA_NUM];
-        InputStream[] is = new InputStream[IP_num];
-        try &#123;
-            //生成收听文件，数量为&#123;本机字符串长度&#125;*&#123;单词表长度&#125;
-            for (int i = 0; i &lt; alpha_num; i++) &#123;
-                for (int j = 0; j &lt; CONST.ALPHA_NUM; j++) &#123;
-                    files[i * CONST.ALPHA_NUM + j] = new FileOutputStream(FileSL.CharFile(FNet, IP_alpha.charAt(i), (char) (j + &#39;a&#39;)));
-                &#125;
-            &#125;
-            //注册子线程
-            for (int i = 0; i &lt; IP_num; i++) &#123;
-                is[i] = ServerList[i].getInputStream();
-                THR.ExecWait();
-                THR.ThrPool.execute(new Receive(IP_alpha.charAt(0), files, is[i]));
-            &#125;
-            THR.PoolWait(THR.ThrPool);
-            for (FileOutputStream fw : files) &#123;
-                fw.close();
-            &#125;
-        &#125; catch (IOException e) &#123;
-            throw new RuntimeException(e);
-        &#125;
-    &#125;
-&#125;
-class Receive implements Runnable &#123;
-    final FileOutputStream[] fIn;
-    final char offset;
-    final InputStream is;
+    <span class="token class-name">ServerS</span><span class="token punctuation">(</span><span class="token class-name">File</span> <span class="token class-name">FNet</span><span class="token punctuation">,</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ServerList</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//,,,</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">//获取本机字符串</span>
+        <span class="token class-name">IP_alpha</span> <span class="token operator">=</span> <span class="token class-name">NET<span class="token punctuation">.</span>IPs<span class="token punctuation">.</span>IP_alpha</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token class-name">NET<span class="token punctuation">.</span>IP_idx</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> alpha_num <span class="token operator">=</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//本机字符串长度</span>
+        <span class="token keyword">int</span> <span class="token class-name">IP_num</span> <span class="token operator">=</span> <span class="token class-name">NET<span class="token punctuation">.</span>IPs<span class="token punctuation">.</span>IP_alpha</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//主机数量</span>
+        <span class="token class-name">FileOutputStream</span><span class="token punctuation">[</span><span class="token punctuation">]</span> files <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">[</span>alpha_num <span class="token operator">*</span> CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token class-name">InputStream</span><span class="token punctuation">[</span><span class="token punctuation">]</span> is <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">InputStream</span><span class="token punctuation">[</span><span class="token class-name">IP_num</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">//生成收听文件，数量为&#123;本机字符串长度&#125;*&#123;单词表长度&#125;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> alpha_num<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    files<span class="token punctuation">[</span>i <span class="token operator">*</span> CONST<span class="token punctuation">.</span>ALPHA_NUM <span class="token operator">+</span> j<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span><span class="token class-name">FileSL<span class="token punctuation">.</span>CharFile</span><span class="token punctuation">(</span><span class="token class-name">FNet</span><span class="token punctuation">,</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>j <span class="token operator">+</span> <span class="token char">'a'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token comment">//注册子线程</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token class-name">IP_num</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                is<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token class-name">ServerList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">THR<span class="token punctuation">.</span>ExecWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">THR<span class="token punctuation">.</span>ThrPool</span><span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Receive</span><span class="token punctuation">(</span><span class="token class-name">IP_alpha</span><span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> files<span class="token punctuation">,</span> is<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token class-name">THR<span class="token punctuation">.</span>PoolWait</span><span class="token punctuation">(</span><span class="token class-name">THR<span class="token punctuation">.</span>ThrPool</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">FileOutputStream</span> fw <span class="token operator">:</span> files<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                fw<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">class</span> <span class="token class-name">Receive</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">[</span><span class="token punctuation">]</span> fIn<span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token keyword">char</span> offset<span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">InputStream</span> is<span class="token punctuation">;</span>
 
-    Receive(char offset, FileOutputStream[] fIn, InputStream is);//...
-    @Override
-    public void run() &#123;
-        byte[] lines = new byte[CONST.PAK_CACHE];
-        try &#123;
-            int id;
-            do &#123;
-                is.read(lines);
-                if (lines[0] == &#39;z&#39;) break;//判断空包
-                id = (lines[0] - offset) * CONST.ALPHA_NUM + (lines[1] - &#39;a&#39;);
-                synchronized (fIn[id]) &#123;
-                    fIn[id].write(lines);
-                &#125;
-            &#125; while (true);
-            is.close();
-        &#125; catch (IOException e) &#123;
-            throw new RuntimeException(e);
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<h3 id="IPFilter类"><a href="#IPFilter类" class="headerlink" title="IPFilter类"></a>IPFilter类</h3><p>为了简单地获取文件夹中的特定文件，使用继承了<code>FileFilter</code>接口的类<code>IPFilter</code>来实现过滤机制，之后的<code>AlphaFilter</code>类同理</p>
-<pre><code class="java">//向listFile方法中输入继承了`FileFilter`接口的类，该类会重写方法的判断函数
-Folder.listFile(new IPFilter());
-</code></pre>
-<pre><code class="java">//IPFilter.java
-public class IPFilter implements FileFilter &#123;
-    final String IP_alpha;
+    <span class="token class-name">Receive</span><span class="token punctuation">(</span><span class="token keyword">char</span> offset<span class="token punctuation">,</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">[</span><span class="token punctuation">]</span> fIn<span class="token punctuation">,</span> <span class="token class-name">InputStream</span> is<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lines <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>CONST<span class="token punctuation">.</span>PAK_CACHE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">int</span> id<span class="token punctuation">;</span>
+            <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
+                is<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>lines<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>lines<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token char">'z'</span><span class="token punctuation">)</span> <span class="token keyword">break</span><span class="token punctuation">;</span><span class="token comment">//判断空包</span>
+                id <span class="token operator">=</span> <span class="token punctuation">(</span>lines<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">-</span> offset<span class="token punctuation">)</span> <span class="token operator">*</span> CONST<span class="token punctuation">.</span>ALPHA_NUM <span class="token operator">+</span> <span class="token punctuation">(</span>lines<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token char">'a'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>fIn<span class="token punctuation">[</span>id<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    fIn<span class="token punctuation">[</span>id<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>lines<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            is<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="ipfilter类"><a class="markdownIt-Anchor" href="#ipfilter类"></a> IPFilter类</h3>
+<p>为了简单地获取文件夹中的特定文件，使用继承了<code>FileFilter</code>接口的类<code>IPFilter</code>来实现过滤机制，之后的<code>AlphaFilter</code>类同理</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//向listFile方法中输入继承了`FileFilter`接口的类，该类会重写方法的判断函数</span>
+<span class="token class-name">Folder</span><span class="token punctuation">.</span><span class="token function">listFile</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">IPFilter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//IPFilter.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">IPFilter</span> <span class="token keyword">implements</span> <span class="token class-name">FileFilter</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">;</span>
 
-    IPFilter(String IP_alpha) &#123;
-        this.IP_alpha = IP_alpha;
-    &#125;
-    @Override
-    public boolean accept(File f) &#123;
-        String comp = f.getName().replaceAll(&quot;[.][^.]+$&quot;, &quot;&quot;);
-        return IP_alpha.contains(comp);
-    &#125;
-&#125;
-</code></pre>
-<h3 id="发送总线程类ClientS"><a href="#发送总线程类ClientS" class="headerlink" title="发送总线程类ClientS"></a>发送总线程类ClientS</h3><pre><code class="java">//ClientS.java
-public class ClientS implements Runnable &#123;
-    final File FOutput;
-    final Socket[] ClientList;
+    <span class="token class-name">IPFilter</span><span class="token punctuation">(</span><span class="token class-name">String</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name"><span class="token namespace">this<span class="token punctuation">.</span></span>IP_alpha</span> <span class="token operator">=</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">accept</span><span class="token punctuation">(</span><span class="token class-name">File</span> f<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">String</span> comp <span class="token operator">=</span> f<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">replaceAll</span><span class="token punctuation">(</span><span class="token string">"[.][^.]+$"</span><span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>comp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="发送总线程类clients"><a class="markdownIt-Anchor" href="#发送总线程类clients"></a> 发送总线程类ClientS</h3>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//ClientS.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ClientS</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token class-name">File</span> <span class="token class-name">FOutput</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ClientList</span><span class="token punctuation">;</span>
 
-    ClientS(File FOutput, Socket[] ClientList);//...
-    @Override
-    public void run() &#123;
-        try &#123;
-            int IP_num = NET.IPs.IP_alpha.size();
-            byte[] lines = new byte[CONST.PAK_CACHE];
-            OutputStream os;
-            for (int p = NET.IP_idx, i = NET.IP_idx; p &lt; NET.IP_idx + IP_num; p++, i = p % IP_num) &#123;
-                //确定IO流
-                IPFilter IPF = new IPFilter(NET.IPs.IP_alpha.get(i));
-                File[] F = FOutput.listFiles(IPF);
-                os = ClientList[i].getOutputStream();
-                for (File f : F != null ? F : new File[0]) &#123;
-                    FileInputStream fr;
-                    fr = new FileInputStream(f);
-                    while ((fr.read(lines)) != -1) &#123;
-                        //读取字节，注册子线程
-                        THR.ExecWait();
-                        THR.ThreadPool.execute(new Send(lines.clone(), os));
-                    &#125;
-                    fr.close();
-                    if (!CONST.debug) f.delete();
-                &#125;
-                os.write(NET.END);
-                os.flush();
-                os.close();
-            &#125;
-        &#125; catch (IOException e) &#123;
-            throw new RuntimeException(e);
-        &#125;
-    &#125;
-&#125;
-class Send implements Runnable &#123;
-    final OutputStream os;
-    final byte[] lines;
+    <span class="token class-name">ClientS</span><span class="token punctuation">(</span><span class="token class-name">File</span> <span class="token class-name">FOutput</span><span class="token punctuation">,</span> <span class="token class-name">Socket</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">ClientList</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">int</span> <span class="token class-name">IP_num</span> <span class="token operator">=</span> <span class="token class-name">NET<span class="token punctuation">.</span>IPs<span class="token punctuation">.</span>IP_alpha</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lines <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>CONST<span class="token punctuation">.</span>PAK_CACHE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+            <span class="token class-name">OutputStream</span> os<span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> p <span class="token operator">=</span> <span class="token class-name">NET<span class="token punctuation">.</span>IP_idx</span><span class="token punctuation">,</span> i <span class="token operator">=</span> <span class="token class-name">NET<span class="token punctuation">.</span>IP_idx</span><span class="token punctuation">;</span> p <span class="token operator">&lt;</span> <span class="token class-name">NET<span class="token punctuation">.</span>IP_idx</span> <span class="token operator">+</span> <span class="token class-name">IP_num</span><span class="token punctuation">;</span> p<span class="token operator">++</span><span class="token punctuation">,</span> i <span class="token operator">=</span> p <span class="token operator">%</span> <span class="token class-name">IP_num</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token comment">//确定IO流</span>
+                <span class="token class-name">IPFilter</span> IPF <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IPFilter</span><span class="token punctuation">(</span><span class="token class-name">NET<span class="token punctuation">.</span>IPs<span class="token punctuation">.</span>IP_alpha</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">File</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token class-name">F</span> <span class="token operator">=</span> <span class="token class-name">FOutput</span><span class="token punctuation">.</span><span class="token function">listFiles</span><span class="token punctuation">(</span>IPF<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                os <span class="token operator">=</span> <span class="token class-name">ClientList</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">File</span> f <span class="token operator">:</span> <span class="token class-name">F</span> <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">?</span> <span class="token class-name">F</span> <span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token class-name">FileInputStream</span> fr<span class="token punctuation">;</span>
+                    fr <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>fr<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>lines<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        <span class="token comment">//读取字节，注册子线程</span>
+                        <span class="token class-name">THR<span class="token punctuation">.</span>ExecWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token class-name">THR<span class="token punctuation">.</span>ThreadPool</span><span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Send</span><span class="token punctuation">(</span>lines<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> os<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span>
+                    fr<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>CONST<span class="token punctuation">.</span>debug<span class="token punctuation">)</span> f<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+                os<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>NET<span class="token punctuation">.</span>END<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                os<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                os<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">class</span> <span class="token class-name">Send</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token class-name">OutputStream</span> os<span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lines<span class="token punctuation">;</span>
 
-    public Send(byte[] lines, OutputStream os);//...
-    @Override
-    public void run() &#123;
-        try &#123;
-            synchronized (os) &#123;
-                os.write(lines);
-                os.flush();
-            &#125;
-        &#125; catch (IOException e) &#123;
-            throw new RuntimeException(e);
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-
+    <span class="token keyword">public</span> <span class="token class-name">Send</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lines<span class="token punctuation">,</span> <span class="token class-name">OutputStream</span> os<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>os<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                os<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>lines<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                os<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
@@ -1067,6 +1073,13 @@ class Send implements Runnable &#123;
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 
 

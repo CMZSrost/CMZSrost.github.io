@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
 
 
 
@@ -460,72 +462,87 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="大文件排序-（入口，常量类与初始化类）"><a href="#大文件排序-（入口，常量类与初始化类）" class="headerlink" title="大文件排序 （入口，常量类与初始化类）"></a>大文件排序 （入口，常量类与初始化类）</h1><h2 id="入口-Entry类"><a href="#入口-Entry类" class="headerlink" title="入口 Entry类"></a>入口 Entry类</h2><ol>
+                <h1 id="大文件排序-入口常量类与初始化类"><a class="markdownIt-Anchor" href="#大文件排序-入口常量类与初始化类"></a> 大文件排序 （入口，常量类与初始化类）</h1>
+<h2 id="入口-entry类"><a class="markdownIt-Anchor" href="#入口-entry类"></a> 入口 Entry类</h2>
+<ol>
 <li>设置错误日志</li>
 <li>输入主机编号</li>
 <li>开始初始化</li>
 <li>启动流程</li>
 <li>流程结束与收尾</li>
 </ol>
-<h2 id="常量类"><a href="#常量类" class="headerlink" title="常量类"></a>常量类</h2><h3 id="1-CONST类-简单常量"><a href="#1-CONST类-简单常量" class="headerlink" title="1. CONST类 简单常量"></a>1. CONST类 简单常量</h3><ul>
+<h2 id="常量类"><a class="markdownIt-Anchor" href="#常量类"></a> 常量类</h2>
+<h3 id="1-const类-简单常量"><a class="markdownIt-Anchor" href="#1-const类-简单常量"></a> 1. CONST类 简单常量</h3>
+<ul>
 <li><code>debug</code> debug开关</li>
-<li><code>optFiles</code> 配置文件类 (“D:\Desktop\Test\opts.txt”)</li>
-<li><code>ALPHA_NUM</code> 字母数量 (26)</li>
+<li><code>optFiles</code> 配置文件类 （“D:/Desktop/Test/opts.txt”）</li>
+<li><code>ALPHA_NUM</code> 字母数量 （26）</li>
 <li><code>ALPHABET</code> 字母表</li>
-<li><code>WORD_LEN</code> 单词长度 (16)</li>
-<li><code>PAK_LEN</code> 包长度 (10)</li>
-<li><code>BYTE_CACHE</code> 读取缓存 (16*1000)</li>
-<li><code>PAK_CACHE</code> 包缓存 (10*1000)</li>
+<li><code>WORD_LEN</code> 单词长度 （16）</li>
+<li><code>PAK_LEN</code> 包长度 （10）</li>
+<li><code>BYTE_CACHE</code> 读取缓存 （16*1000）</li>
+<li><code>PAK_CACHE</code> 包缓存 （10*1000）</li>
 <li><code>b2i()</code> 字节转整形函数</li>
-<li><code>ErrorLog</code> 错误日志<ul>
+<li><code>ErrorLog</code> 错误日志
+<ul>
 <li><code>getErrorLog()</code></li>
 <li><code>setErrorLog()</code></li>
 <li><code>closeErrorLog()</code></li>
 </ul>
 </li>
 </ul>
-<h3 id="2-THR类-线程常量"><a href="#2-THR类-线程常量" class="headerlink" title="2. THR类 线程常量"></a>2. THR类 线程常量</h3><ul>
+<h3 id="2-thr类-线程常量"><a class="markdownIt-Anchor" href="#2-thr类-线程常量"></a> 2. THR类 线程常量</h3>
+<ul>
 <li><code>ThreadPool</code> 主线程池</li>
 <li><code>ThrPool</code> 副线程池</li>
 <li><code>ExecWait()</code> 等待空闲线程</li>
 <li><code>PoolWait()</code> 等待线程池执行完毕</li>
 <li><code>ThreadPoolExecutorFactory</code> 线程池工厂</li>
-<li><code>THR_NUM</code> 核心线程数 (20)</li>
-<li><code>THR_MAX_NUM</code> 最大线程数 (80)</li>
-<li><code>B_MAX_NUM</code> 线程阻塞队列大小 (1000)</li>
-<li><code>THR_ALIVE_TIME</code> 线程最大存活时间 (3s)</li>
+<li><code>THR_NUM</code> 核心线程数 （20）</li>
+<li><code>THR_MAX_NUM</code> 最大线程数 （80）</li>
+<li><code>B_MAX_NUM</code> 线程阻塞队列大小 （1000）</li>
+<li><code>THR_ALIVE_TIME</code> 线程最大存活时间 （3s）</li>
 </ul>
-<h3 id="3-NET类-网络流常量"><a href="#3-NET类-网络流常量" class="headerlink" title="3. NET类 网络流常量"></a>3. NET类 网络流常量</h3><ul>
-<li><code>IP_idx</code> 本主机编号 (0~7)</li>
-<li><code>PORT</code> 服务器端口 (4700)</li>
+<h3 id="3-net类-网络流常量"><a class="markdownIt-Anchor" href="#3-net类-网络流常量"></a> 3. NET类 网络流常量</h3>
+<ul>
+<li><code>IP_idx</code> 本主机编号 （0~7）</li>
+<li><code>PORT</code> 服务器端口 （4700）</li>
 <li><code>IPs</code> IP类</li>
-<li><code>END</code> 网络传输结束符(<code>PAK_CACHE</code>)<ul>
+<li><code>END</code> 网络传输结束符（<code>PAK_CACHE</code>）
+<ul>
 <li><code>ENDFactory()</code> 结束符工厂</li>
 </ul>
 </li>
 </ul>
-<h3 id="4-FileSL类-文件处理类，封包对文件操作，简化代码"><a href="#4-FileSL类-文件处理类，封包对文件操作，简化代码" class="headerlink" title="4. FileSL类 文件处理类，封包对文件操作，简化代码"></a>4. FileSL类 文件处理类，封包对文件操作，简化代码</h3><ul>
+<h3 id="4-filesl类-文件处理类封包对文件操作简化代码"><a class="markdownIt-Anchor" href="#4-filesl类-文件处理类封包对文件操作简化代码"></a> 4. FileSL类 文件处理类，封包对文件操作，简化代码</h3>
+<ul>
 <li><code>LoadFile()</code> 读取文件，将文件中每一行存储于<code>Array&lt;String&gt;</code></li>
 <li><code>CharFile()</code> 生成字母命名的txt文件</li>
 <li><code>ResultFile()</code> 生成结果文件</li>
-<li><code>FileFactory()</code> 文件工厂，判断文件(夹),若文件(夹)不存在则创建文件(夹)</li>
+<li><code>FileFactory()</code> 文件工厂，判断文件（夹）,若文件（夹）不存在则创建文件（夹）</li>
 </ul>
-<h2 id="初始化类"><a href="#初始化类" class="headerlink" title="初始化类"></a>初始化类</h2><p>动态确定配置文件，便于在不同配置环境下调试</p>
-<h3 id="1-Files-F开头为文件夹，f为文件"><a href="#1-Files-F开头为文件夹，f为文件" class="headerlink" title="1. Files (F开头为文件夹，f为文件)"></a>1. Files (F开头为文件夹，f为文件)</h3><ul>
-<li><code>FInput</code> 输入 (“D:\Desktop\Test\FIn”)</li>
-<li><code>FOutput</code> 切分文件输出(\网络流输入) (“D:\Desktop\Test\FOut”)</li>
-<li><code>FNet</code> 网络流输出(\排序) (“D:\Desktop\Test\FNet”)</li>
-<li><code>FResult</code> 输出 (“D:\Desktop\Test\FResult”)</li>
-<li><code>fIP</code> IP地址 (“D:\Desktop\Test\IP.txt”)</li>
-<li><code>fError</code> 错误日志 (“D:\Desktop\Test\Errorlog.txt”)</li>
+<h2 id="初始化类"><a class="markdownIt-Anchor" href="#初始化类"></a> 初始化类</h2>
+<p>动态确定配置文件，便于在不同配置环境下调试</p>
+<h3 id="1-files-f开头为文件夹f为文件"><a class="markdownIt-Anchor" href="#1-files-f开头为文件夹f为文件"></a> 1. Files （F开头为文件夹，f为文件）</h3>
+<ul>
+<li><code>FInput</code> 输入 （“D:/Desktop/Test/FIn”）</li>
+<li><code>FOutput</code> 切分文件输出（/网络流输入） （“D:/Desktop/Test/FOut”）</li>
+<li><code>FNet</code> 网络流输出（/排序） （“D:/Desktop/Test/FNet”）</li>
+<li><code>FResult</code> 输出 （“D:/Desktop/Test/FResult”）</li>
+<li><code>fIP</code> IP地址 （“D:/Desktop/Test/IP.txt”）</li>
+<li><code>fError</code> 错误日志 （“D:/Desktop/Test/Errorlog.txt”）</li>
 </ul>
-<h3 id="2-IP"><a href="#2-IP" class="headerlink" title="2. IP"></a>2. IP</h3><ul>
-<li><code>IP_num</code> 主机数量 (8)</li>
+<h3 id="2-ip"><a class="markdownIt-Anchor" href="#2-ip"></a> 2. IP</h3>
+<ul>
+<li><code>IP_num</code> 主机数量 （8）</li>
 <li><code>IP_address</code> IP地址</li>
 <li><code>IP_alpha</code> IP对应字符串</li>
 <li><code>IP_String()</code> 根据主机数量与给定切分依据，获取IP对应字符串，便于在不同主机数量时分配字符</li>
@@ -862,6 +879,13 @@
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 
 

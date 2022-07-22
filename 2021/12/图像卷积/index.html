@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
 
 
 
@@ -443,7 +445,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.4k
+                    2.6k
                 </div>
                 
 
@@ -460,12 +462,16 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="内容分析"><a href="#内容分析" class="headerlink" title="内容分析"></a>内容分析</h2><hr>
+                <h2 id="内容分析"><a class="markdownIt-Anchor" href="#内容分析"></a> 内容分析</h2>
+<hr />
 <p>文档已经把操作讲的很详细了，不过简便起见，这里简单叙述一下</p>
 <blockquote>
 <p>图像:  计算机中bmp格式的图像</p>
@@ -480,19 +486,35 @@
 <p>二维卷积:  一种对矩阵的运算</p>
 </blockquote>
 <blockquote>
-<p>单个通道上的图像卷积操作:  图像是一个像素阵列，我们选择阵列中3x3的方块作为运算的作用域(Field)，再自定义大小相同的卷积核(Kernel)，如果暂时不考虑图像的RGB通道，那么一次卷积运算即作用域方阵（以下简称F）与卷积核方阵（以下简称K）间的运算，具体过程为：以待计算像素点（简称P）为F与K的中心，F与K上对应点的乘积和即为P的值。<br>$$<br>\begin{bmatrix}<br>0 &amp; 0 &amp; 0 \\<br>0 &amp; 1 &amp; 1 \\<br>0 &amp; 1 &amp; 2<br>\end{bmatrix}<br>*\begin{bmatrix}<br>4 &amp; 0 &amp; 0 \\<br>0 &amp; 0 &amp; 0 \\<br>0 &amp; 0 &amp; -4<br>\end{bmatrix}\\<br>= 0 * 4 + 0 * 0 + 0 * 0 + 0 * 0 \\<br>+1 * 0 + 1 * 0 + 0 * 0 + 1 * 0 + 2 * (-4) \\<br>= -8<br>$$</p>
+<p>单个通道上的图像卷积操作:  图像是一个像素阵列，我们选择阵列中3x3的方块作为运算的作用域(Field)，再自定义大小相同的卷积核(Kernel)，如果暂时不考虑图像的RGB通道，那么一次卷积运算即作用域方阵（以下简称F）与卷积核方阵（以下简称K）间的运算，具体过程为：以待计算像素点（简称P）为F与K的中心，F与K上对应点的乘积和即为P的值。</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo>∗</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>4</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mo>−</mo><mn>4</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mspace linebreak="newline"></mspace><mspace linebreak="newline"></mspace><mo>=</mo><mn>0</mn><mo>∗</mo><mn>4</mn><mo>+</mo><mn>0</mn><mo>∗</mo><mn>0</mn><mo>+</mo><mn>0</mn><mo>∗</mo><mn>0</mn><mo>+</mo><mn>0</mn><mo>∗</mo><mn>0</mn><mspace linebreak="newline"></mspace><mspace linebreak="newline"></mspace><mo>+</mo><mn>1</mn><mo>∗</mo><mn>0</mn><mo>+</mo><mn>1</mn><mo>∗</mo><mn>0</mn><mo>+</mo><mn>0</mn><mo>∗</mo><mn>0</mn><mo>+</mo><mn>1</mn><mo>∗</mo><mn>0</mn><mo>+</mo><mn>2</mn><mo>∗</mo><mo stretchy="false">(</mo><mo>−</mo><mn>4</mn><mo stretchy="false">)</mo><mspace linebreak="newline"></mspace><mspace linebreak="newline"></mspace><mo>=</mo><mo>−</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">\begin{bmatrix}
+0 &amp; 0 &amp; 0 \\\\
+0 &amp; 1 &amp; 1 \\\\
+0 &amp; 1 &amp; 2 
+\end{bmatrix}
+*\begin{bmatrix}
+4 &amp; 0 &amp; 0 \\\\
+0 &amp; 0 &amp; 0 \\\\
+0 &amp; 0 &amp; -4 
+\end{bmatrix}\\\\
+= 0 * 4 + 0 * 0 + 0 * 0 + 0 * 0 \\\\
++1 * 0 + 1 * 0 + 0 * 0 + 1 * 0 + 2 * (-4) \\\\
+= -8
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:6.00404em;vertical-align:-2.75004em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.254em;"><span style="top:-1.0499800000000006em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎣</span></span></span><span style="top:-2.2049800000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-2.8059800000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-3.4069800000000003em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-4.00798em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-5.2540000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎡</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75004em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.2500000000000004em;"><span style="top:-5.410000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.8099999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-0.6099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.7500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.2500000000000004em;"><span style="top:-5.410000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.0100000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-0.6100000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.2500000000000004em;"><span style="top:-5.410000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.0100000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-0.6100000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.254em;"><span style="top:-1.0499800000000006em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎦</span></span></span><span style="top:-2.2049800000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-2.8059800000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-3.4069800000000003em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-4.00798em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-5.2540000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎤</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75004em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:6.00404em;vertical-align:-2.75004em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.254em;"><span style="top:-1.0499800000000006em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎣</span></span></span><span style="top:-2.2049800000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-2.8059800000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-3.4069800000000003em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-4.00798em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-5.2540000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎡</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75004em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.2500000000000004em;"><span style="top:-5.410000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">4</span></span></span><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.8099999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-0.6099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.7500000000000004em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.2500000000000004em;"><span style="top:-5.410000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.0100000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-0.6100000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.2500000000000004em;"><span style="top:-5.410000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.0100000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-0.6100000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">−</span><span class="mord">4</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.254em;"><span style="top:-1.0499800000000006em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎦</span></span></span><span style="top:-2.2049800000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-2.8059800000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-3.4069800000000003em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-4.00798em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-5.2540000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎤</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.75004em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="mspace newline"></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="mspace newline"></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">−</span><span class="mord">4</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="mspace newline"></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">−</span><span class="mord">8</span></span></span></span></span></p>
 </blockquote>
 <p>综上，只需对遍历图像像素点，进行卷积操作并输出即可</p>
-<h2 id="设计方法"><a href="#设计方法" class="headerlink" title="设计方法"></a>设计方法</h2><hr>
-<h3 id="选取卷积范围"><a href="#选取卷积范围" class="headerlink" title="选取卷积范围"></a>选取卷积范围</h3><p>只需确定图像长宽，获得像素点向八个方向跳转需要的距离</p>
+<h2 id="设计方法"><a class="markdownIt-Anchor" href="#设计方法"></a> 设计方法</h2>
+<hr />
+<h3 id="选取卷积范围"><a class="markdownIt-Anchor" href="#选取卷积范围"></a> 选取卷积范围</h3>
+<p>只需确定图像长宽，获得像素点向八个方向跳转需要的距离</p>
 <p>故设计init函数初始化跳跃距离</p>
-<pre><code class="C">int leaplen[9];//位置转移距离
-/*获取位置转移距离
+<h2 id="-code0-"><a class="markdownIt-Anchor" href="#-code0-"></a> <pre class="line-numbers language-C" data-language="C"><code class="language-C">int leaplen[9];&#x2F;&#x2F;位置转移距离
+&#x2F;*获取位置转移距离
 --  input:
     BMPImage *img,图像信息来源
 --  output:
     void
-*/
+*&#x2F;
 void init(BMPImage *img)
 &#123;
     enum direction
@@ -502,172 +524,165 @@ void init(BMPImage *img)
         downleft, down,   downright
     &#125;;
 
-    leaplen[middle] = 0;
-    leaplen[up] = -img-&gt;width;
-    leaplen[left] = -1;
+    leaplen[middle] &#x3D; 0;
+    leaplen[up] &#x3D; -img-&gt;width;
+    leaplen[left] &#x3D; -1;
 
-    leaplen[upleft] = leaplen[up] + leaplen[left];
-    leaplen[upright] = leaplen[up] + leaplen[right];
+    leaplen[upleft] &#x3D; leaplen[up] + leaplen[left];
+    leaplen[upright] &#x3D; leaplen[up] + leaplen[right];
 
-    leaplen[down] = -leaplen[up];
-    leaplen[right] = -leaplen[left];
-    leaplen[downleft] = -leaplen[upright];
-    leaplen[downright] = -leaplen[upleft];
+    leaplen[down] &#x3D; -leaplen[up];
+    leaplen[right] &#x3D; -leaplen[left];
+    leaplen[downleft] &#x3D; -leaplen[upright];
+    leaplen[downright] &#x3D; -leaplen[upleft];
     return;
-&#125;
-</code></pre>
-<hr>
-<h3 id="卷积操作"><a href="#卷积操作" class="headerlink" title="卷积操作"></a>卷积操作</h3><p>对图像进行卷积操作，首先得完成边界判断，对单像素的乘积以及对单像素的拷贝</p>
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></h2>
+<h3 id="卷积操作"><a class="markdownIt-Anchor" href="#卷积操作"></a> 卷积操作</h3>
+<p>对图像进行卷积操作，首先得完成边界判断，对单像素的乘积以及对单像素的拷贝</p>
 <blockquote>
 <p>边界判断，定义全局变量以传递边界情况</p>
 </blockquote>
-<pre><code class="C">bool pixel_add[3][3];//判断卷积核该位置是否加入计算
-/*边界判断
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">bool pixel_add[3][3];&#x2F;&#x2F;判断卷积核该位置是否加入计算
+&#x2F;*边界判断
 --  input:
     int position,像素位置
     int height,长
     int width,宽
 --  output:
     void
-*/
+*&#x2F;
 void boundary_check(int position, int height, int width)
 &#123;
-    for (int i = 0; i &lt; 3; i++)
+    for (int i &#x3D; 0; i &lt; 3; i++)
     &#123;
-        for (int j = 0; j &lt; 3; j++)
+        for (int j &#x3D; 0; j &lt; 3; j++)
         &#123;
-            pixel_add[i][j] = true;
+            pixel_add[i][j] &#x3D; true;
         &#125;
     &#125;
-    if (position / width == 0)
-        for (int i = 0; i &lt; 3; i++)
-            pixel_add[0][i] = false;
-    if (position / width == height - 1)
-        for (int i = 0; i &lt; 3; i++)
-            pixel_add[2][i] = false;
-    if (position % width == 0)
-        for (int i = 0; i &lt; 3; i++)
-            pixel_add[i][0] = false;
-    if (position % width == width - 1)
-        for (int i = 0; i &lt; 3; i++)
-            pixel_add[i][2] = false;
+    if (position &#x2F; width &#x3D;&#x3D; 0)
+        for (int i &#x3D; 0; i &lt; 3; i++)
+            pixel_add[0][i] &#x3D; false;
+    if (position &#x2F; width &#x3D;&#x3D; height - 1)
+        for (int i &#x3D; 0; i &lt; 3; i++)
+            pixel_add[2][i] &#x3D; false;
+    if (position % width &#x3D;&#x3D; 0)
+        for (int i &#x3D; 0; i &lt; 3; i++)
+            pixel_add[i][0] &#x3D; false;
+    if (position % width &#x3D;&#x3D; width - 1)
+        for (int i &#x3D; 0; i &lt; 3; i++)
+            pixel_add[i][2] &#x3D; false;
 
     return;
-&#125;;
-</code></pre>
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ol start="2">
 <li>对单像素乘积</li>
 </ol>
 <blockquote>
 <p>由于边界的存在，故定义零像素点以统一计算</p>
 </blockquote>
-<pre><code class="C">PixelBlock zeroPixel=&#123;0,0,0&#125;;//像素点0
-</code></pre>
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">PixelBlock zeroPixel&#x3D;&#123;0,0,0&#125;;&#x2F;&#x2F;像素点0<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <blockquote>
 <p>简便起见，设计add函数以求积并加到结果上</p>
 </blockquote>
-<pre><code class="C">/*计算单个矩阵元素并添加于结果
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">&#x2F;*计算单个矩阵元素并添加于结果
 --  input:
     PixelBlock* adder,计算对象
     PixelBlock* addee,结果
     float times,倍数
 --  output:
     void
-*/
+*&#x2F;
 void add(PixelBlock *adder, PixelBlock *addee, float times)
 &#123;
-    addee-&gt;R += (unsigned char)((float)adder-&gt;R * times);
-    addee-&gt;G += (unsigned char)((float)adder-&gt;G * times);
-    addee-&gt;B += (unsigned char)((float)adder-&gt;B * times);
+    addee-&gt;R +&#x3D; (unsigned char)((float)adder-&gt;R * times);
+    addee-&gt;G +&#x3D; (unsigned char)((float)adder-&gt;G * times);
+    addee-&gt;B +&#x3D; (unsigned char)((float)adder-&gt;B * times);
     return;
-&#125;;
-</code></pre>
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <blockquote>
 <p>为了初始化输出结果，设计copy函数用零像素点初始化</p>
 </blockquote>
-<pre><code class="C">/*拷贝像素点值
+<h2 id="-code4-"><a class="markdownIt-Anchor" href="#-code4-"></a> <pre class="line-numbers language-C" data-language="C"><code class="language-C">&#x2F;*拷贝像素点值
 --  input:
     PixelBlock* copyer,拷贝对象
     PixelBlock* copyee,赋值对象
 --  output:
     void
-*/
+*&#x2F;
 void copy(PixelBlock *copyer, PixelBlock *copyee)
 &#123;
-    copyee-&gt;R = copyer-&gt;R;
-    copyee-&gt;G = copyer-&gt;G;
-    copyee-&gt;B = copyer-&gt;B;
+    copyee-&gt;R &#x3D; copyer-&gt;R;
+    copyee-&gt;G &#x3D; copyer-&gt;G;
+    copyee-&gt;B &#x3D; copyer-&gt;B;
     return;
-&#125;;
-</code></pre>
-<hr>
-<h3 id="遍历卷积"><a href="#遍历卷积" class="headerlink" title="遍历卷积"></a>遍历卷积</h3><blockquote>
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></h2>
+<h3 id="遍历卷积"><a class="markdownIt-Anchor" href="#遍历卷积"></a> 遍历卷积</h3>
+<blockquote>
 <p>在已提供的函数接口上进行遍历，完成图像卷积</p>
 </blockquote>
-<pre><code class="C">/*对图像进行卷积
+<h2 id="-code5-"><a class="markdownIt-Anchor" href="#-code5-"></a> <pre class="line-numbers language-C" data-language="C"><code class="language-C">&#x2F;*对图像进行卷积
 --  input:
     BMPImage* img,原图像
     float const ** kernel,卷积核
 --  output:
     BMPImage*,卷积结果
-*/
+*&#x2F;
 BMPImage *Convolution2D(BMPImage *img, const float (*kernel)[3])
 &#123;
-    BMPImage *res = LoadBMPImage((char *)IMG);
+    BMPImage *res &#x3D; LoadBMPImage((char *)IMG);
 
-    int x_len = res-&gt;width,
-        y_len = res-&gt;height,
-        area = x_len * y_len;
-    PixelBlock *img_ptr = img-&gt;imageData;
-    PixelBlock *res_ptr = res-&gt;imageData;
+    int x_len &#x3D; res-&gt;width,
+        y_len &#x3D; res-&gt;height,
+        area &#x3D; x_len * y_len;
+    PixelBlock *img_ptr &#x3D; img-&gt;imageData;
+    PixelBlock *res_ptr &#x3D; res-&gt;imageData;
 
-    //遍历计算结果
-    for (int i = 0; i &lt; area; i++)
+    &#x2F;&#x2F;遍历计算结果
+    for (int i &#x3D; 0; i &lt; area; i++)
     &#123;
-        boundary_check(i, img-&gt;height, img-&gt;width); //更新计算范围
+        boundary_check(i, img-&gt;height, img-&gt;width); &#x2F;&#x2F;更新计算范围
         copy(&amp;zeroPixel, &amp;res_ptr[i]);
 
-        //计算矩阵卷积
-        for (int j = 0; j &lt; 3; j++)
+        &#x2F;&#x2F;计算矩阵卷积
+        for (int j &#x3D; 0; j &lt; 3; j++)
         &#123;
-            for (int k = 0, ptr; k &lt; 3; k++)
+            for (int k &#x3D; 0, ptr; k &lt; 3; k++)
             &#123;
                 if (pixel_add[j][k])
                 &#123;
-                    ptr = i + leaplen[j * 3 + k];
+                    ptr &#x3D; i + leaplen[j * 3 + k];
                     add(&amp;img_ptr[ptr], &amp;res_ptr[i], kernel[j][k]);
                 &#125;
             &#125;
         &#125;
     &#125;
     return res;
-&#125;;
-</code></pre>
-<hr>
-<h3 id="处理测试文件"><a href="#处理测试文件" class="headerlink" title="处理测试文件"></a>处理测试文件</h3><blockquote>
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></h2>
+<h3 id="处理测试文件"><a class="markdownIt-Anchor" href="#处理测试文件"></a> 处理测试文件</h3>
+<blockquote>
 <p>在main函数输入待测试卷积核</p>
 </blockquote>
-<pre><code class="C">float const outlinekernel[3][3] = &#123; &#123;-0.125, -0.125, -0.125&#125;,
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">float const outlinekernel[3][3] &#x3D; &#123; &#123;-0.125, -0.125, -0.125&#125;,
                                     &#123;-0.125, 1, -0.125&#125;,
                                     &#123;-0.125, -0.125, -0.125&#125;&#125;;
 
-float const gaussiankernel[3][3] = &#123;&#123;0.089, 0.112, 0.089&#125;,
+float const gaussiankernel[3][3] &#x3D; &#123;&#123;0.089, 0.112, 0.089&#125;,
                                     &#123;0.112, 0.100, 0.112&#125;,
                                     &#123;0.089, 0.112, 0.089&#125;&#125;;
 
-float const sculptruekernel[3][3] =&#123;&#123;-1 / 2.0, -0, -0&#125;,
+float const sculptruekernel[3][3] &#x3D;&#123;&#123;-1 &#x2F; 2.0, -0, -0&#125;,
                                     &#123;-0, 0, -0&#125;,
-                                    &#123;0, 0, 1 / 2.0&#125;&#125;;
-</code></pre>
+                                    &#123;0, 0, 1 &#x2F; 2.0&#125;&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <blockquote>
 <p>处理并输出图像</p>
 </blockquote>
-<pre><code class="C">init(img);
-//处理图像
-BMPImage *outline = Convolution2D(img, outlinekernel);
-BMPImage *gaussian = Convolution2D(img, gaussiankernel);
-BMPImage *sculptrue = Convolution2D(img, sculptruekernel);
-//输出图像
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">init(img);
+&#x2F;&#x2F;处理图像
+BMPImage *outline &#x3D; Convolution2D(img, outlinekernel);
+BMPImage *gaussian &#x3D; Convolution2D(img, gaussiankernel);
+BMPImage *sculptrue &#x3D; Convolution2D(img, sculptruekernel);
+&#x2F;&#x2F;输出图像
 if(SaveBMPImage((char*)&quot;outline.bmp&quot;, outline))
 &#123;
     printf(&quot;outline.bmp image processed.\n&quot;);
@@ -679,62 +694,62 @@ if(SaveBMPImage((char*)&quot;gaussian.bmp&quot;, gaussian))
 if(SaveBMPImage((char*)&quot;sculpture.bmp&quot;, sculptrue))
 &#123;
     printf(&quot;sculpture.bmp image processed.\n&quot;);
-&#125;
-</code></pre>
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <blockquote>
 <p>释放内存空间</p>
 </blockquote>
-<pre><code class="C">if(img!=NULL) free(img);
-if(outline!=NULL) free(outline);
-if(gaussian!=NULL) free(gaussian);
-if(sculptrue!=NULL) free(sculptrue);
-</code></pre>
-<h2 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h2><hr>
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">if(img!&#x3D;NULL) free(img);
+if(outline!&#x3D;NULL) free(outline);
+if(gaussian!&#x3D;NULL) free(gaussian);
+if(sculptrue!&#x3D;NULL) free(sculptrue);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="算法分析"><a class="markdownIt-Anchor" href="#算法分析"></a> 算法分析</h2>
+<hr />
 <p>该算法采用模拟法</p>
 <p>设长为L，宽为W</p>
 <p>时间复杂度为O(2<em>9</em>L*W)=O(LW)</p>
 <p>空间复杂度为O(L*W)=O(LW)</p>
-<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><hr>
+<h2 id="附录"><a class="markdownIt-Anchor" href="#附录"></a> 附录</h2>
+<hr />
 <p>补充题中已经提供了读取bmp文件的源代码，只需了解可用的接口和可访问的成员数据即可</p>
-<pre><code class="C++">
-//用/* */注释可用接口与数据
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;&#x2F;用&#x2F;* *&#x2F;注释可用接口与数据
 
 #ifndef CV_H
 
 #define CV_H
 
-//hexo会把&lt;&gt;识别成标签，故此处多加\
+&#x2F;&#x2F;hexo会把&lt;&gt;识别成标签，故此处多加\
 
 # include &lt;\stdbool.h&gt;
 typedef struct
 &#123;
-    unsigned long bfSize;  //文件大小
-    unsigned short fReserved1;  //保留字
-    unsigned short fReserved2;  //保留字
-    unsigned long fOffBits;  //位图数据偏移字节数
-&#125; BitMapFileHeader;  //文件头
+    unsigned long bfSize;  &#x2F;&#x2F;文件大小
+    unsigned short fReserved1;  &#x2F;&#x2F;保留字
+    unsigned short fReserved2;  &#x2F;&#x2F;保留字
+    unsigned long fOffBits;  &#x2F;&#x2F;位图数据偏移字节数
+&#125; BitMapFileHeader;  &#x2F;&#x2F;文件头
 
 typedef struct
 &#123;
-    unsigned long biSize;   //结构体长度
-    long biWidth;   //位图宽度
-    long biHeight;   //位图高度
-    unsigned short biPlanes;   //位图平面数
-    unsigned short biBitCount;  //颜色位数
-    unsigned long biCompression;   //压缩方式
-    unsigned long biSizeImage;   //实际位图数据占用的字节数
-    long biXPelsPerMeter;   //X方向分辨率
-    long biYPelsPerMeter;   //Y方向分辨率
-    unsigned long biClrUsed;   //使用的颜色数
-    unsigned long biClrImportant;   //重要颜色数
-&#125; BitMapInfoHeader;  //位图信息头
+    unsigned long biSize;   &#x2F;&#x2F;结构体长度
+    long biWidth;   &#x2F;&#x2F;位图宽度
+    long biHeight;   &#x2F;&#x2F;位图高度
+    unsigned short biPlanes;   &#x2F;&#x2F;位图平面数
+    unsigned short biBitCount;  &#x2F;&#x2F;颜色位数
+    unsigned long biCompression;   &#x2F;&#x2F;压缩方式
+    unsigned long biSizeImage;   &#x2F;&#x2F;实际位图数据占用的字节数
+    long biXPelsPerMeter;   &#x2F;&#x2F;X方向分辨率
+    long biYPelsPerMeter;   &#x2F;&#x2F;Y方向分辨率
+    unsigned long biClrUsed;   &#x2F;&#x2F;使用的颜色数
+    unsigned long biClrImportant;   &#x2F;&#x2F;重要颜色数
+&#125; BitMapInfoHeader;  &#x2F;&#x2F;位图信息头
 
 typedef struct
 &#123;
     unsigned char B;
     unsigned char G;
     unsigned char R;
-&#125; PixelBlock;/*像素点数据，存放色相数据*/
+&#125; PixelBlock;&#x2F;*像素点数据，存放色相数据*&#x2F;
 
 typedef struct
 &#123;
@@ -742,102 +757,102 @@ typedef struct
     int height;
     int channels;
     PixelBlock* imageData;
-&#125;BMPImage;/*图像数据，存放长宽，色彩通道数与全体像素点（一维存放二维数据）*/
+&#125;BMPImage;&#x2F;*图像数据，存放长宽，色彩通道数与全体像素点（一维存放二维数据）*&#x2F;
 
-extern BMPImage* LoadBMPImage(char*);//读取bmp文件
-extern bool SaveBMPImage(char*, BMPImage*);//输出bmp文件
+extern BMPImage* LoadBMPImage(char*);&#x2F;&#x2F;读取bmp文件
+extern bool SaveBMPImage(char*, BMPImage*);&#x2F;&#x2F;输出bmp文件
 
-#endif
-</code></pre>
-<h2 id="源代码查看"><a href="#源代码查看" class="headerlink" title="源代码查看"></a>源代码查看</h2><hr>
-<pre><code class="C++">
-//hexo会把&lt;&gt;识别成标签，故此处多加\
+#endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="源代码查看"><a class="markdownIt-Anchor" href="#源代码查看"></a> 源代码查看</h2>
+<hr />
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;&#x2F;hexo会把&lt;&gt;识别成标签，故此处多加\
 
 #include &lt;\stdio.h&gt;
 #include &lt;\stdlib.h&gt;
 #include &quot;cv.h&quot;
 #define IMG &quot;girl.bmp&quot;
 
-/*
+&#x2F;*
 author: 郭伟铭
 Date: 2021.10.13
 Encoding-type: GBK
 version: 1.0
-*/
+*&#x2F;
 
-PixelBlock zeroPixel=&#123;0,0,0&#125;;//像素点0
-int leaplen[9];//位置转移距离
-bool pixel_add[3][3];//判断卷积核该位置是否加入计算
+PixelBlock zeroPixel&#x3D;&#123;0,0,0&#125;;&#x2F;&#x2F;像素点0
+int leaplen[9];&#x2F;&#x2F;位置转移距离
+bool pixel_add[3][3];&#x2F;&#x2F;判断卷积核该位置是否加入计算
 
-/*对图像进行卷积
+&#x2F;*对图像进行卷积
 --  input:
     BMPImage* img,原图像
     float const ** kernel,卷积核
 --  output:
     BMPImage*,卷积结果
-*/
+*&#x2F;
 BMPImage* Convolution2D(BMPImage*, const float (*)[3]);
 
-/*边界判断
+&#x2F;*边界判断
 --  input:
     int position,像素位置
     int height,长
     int width,宽
 --  output:
     void
-*/
+*&#x2F;
 void boundary_check(int,int,int);
 
-/*获取位置转移距离
+&#x2F;*获取位置转移距离
 --  input:
     BMPImage *img,图像信息来源
 --  output:
     void
-*/
+*&#x2F;
 void init(BMPImage*);
 
-/*计算单个矩阵元素并添加于结果
+&#x2F;*计算单个矩阵元素并添加于结果
 --  input:
     PixelBlock* adder,计算对象
     PixelBlock* addee,结果
     float times,倍数
 --  output:
     void
-*/
+*&#x2F;
 void add(PixelBlock*,PixelBlock*,float);
 
-/*拷贝像素点值
+&#x2F;*拷贝像素点值
 --  input:
     PixelBlock* copyer,拷贝对象
     PixelBlock* copyee,赋值对象
 --  output:
     void
-*/
+*&#x2F;
 void copy(PixelBlock*,PixelBlock*);
 
 int main(int argc, char* argv[])
 &#123;
     printf(&quot;Number:210810429\n&quot;);
     printf(&quot;subject: image - program No.1\n\n&quot;);
-    BMPImage *img = LoadBMPImage((char*)IMG);
-    /**Write your code here**/
-    float const outlinekernel[3][3] = &#123;&#123;-0.125, -0.125, -0.125&#125;,
+    BMPImage *img &#x3D; LoadBMPImage((char*)IMG);
+    &#x2F;**Write your code here**&#x2F;
+    float const outlinekernel[3][3] &#x3D; &#123;&#123;-0.125, -0.125, -0.125&#125;,
                                        &#123;-0.125, 1, -0.125&#125;,
                                        &#123;-0.125, -0.125, -0.125&#125;&#125;;
 
-    float const gaussiankernel[3][3] = &#123;&#123;0.089, 0.112, 0.089&#125;,
+    float const gaussiankernel[3][3] &#x3D; &#123;&#123;0.089, 0.112, 0.089&#125;,
                                         &#123;0.112, 0.100, 0.112&#125;,
                                         &#123;0.089, 0.112, 0.089&#125;&#125;;
 
-    float const sculptruekernel[3][3] = &#123;&#123;-1 / 2.0, -0, -0&#125;,
+    float const sculptruekernel[3][3] &#x3D; &#123;&#123;-1 &#x2F; 2.0, -0, -0&#125;,
                                          &#123;-0, 0, -0&#125;,
-                                         &#123;0, 0, 1 / 2.0&#125;&#125;;
+                                         &#123;0, 0, 1 &#x2F; 2.0&#125;&#125;;
 
     init(img);
-    BMPImage *outline = Convolution2D(img, outlinekernel);
-    BMPImage *gaussian = Convolution2D(img, gaussiankernel);
-    BMPImage *sculptrue = Convolution2D(img, sculptruekernel);
-    /**Done, save picture**/
+    BMPImage *outline &#x3D; Convolution2D(img, outlinekernel);
+    BMPImage *gaussian &#x3D; Convolution2D(img, gaussiankernel);
+    BMPImage *sculptrue &#x3D; Convolution2D(img, sculptruekernel);
+    &#x2F;**Done, save picture**&#x2F;
     if(SaveBMPImage((char*)&quot;outline.bmp&quot;, outline))
     &#123;
         printf(&quot;outline.bmp image processed.\n&quot;);
@@ -851,38 +866,38 @@ int main(int argc, char* argv[])
         printf(&quot;sculpture.bmp image processed.\n&quot;);
     &#125;
 
-    if(img!=NULL) free(img);
-    if(outline!=NULL) free(outline);
-    if(gaussian!=NULL) free(gaussian);
-    if(sculptrue!=NULL) free(sculptrue);
+    if(img!&#x3D;NULL) free(img);
+    if(outline!&#x3D;NULL) free(outline);
+    if(gaussian!&#x3D;NULL) free(gaussian);
+    if(sculptrue!&#x3D;NULL) free(sculptrue);
 
     return 0;
 &#125;
 
 BMPImage *Convolution2D(BMPImage *img, const float (*kernel)[3])
 &#123;
-    BMPImage *res = LoadBMPImage((char *)IMG);
+    BMPImage *res &#x3D; LoadBMPImage((char *)IMG);
 
-    int x_len = res-&gt;width,
-        y_len = res-&gt;height,
-        area = x_len * y_len;
-    PixelBlock *img_ptr = img-&gt;imageData;
-    PixelBlock *res_ptr = res-&gt;imageData;
+    int x_len &#x3D; res-&gt;width,
+        y_len &#x3D; res-&gt;height,
+        area &#x3D; x_len * y_len;
+    PixelBlock *img_ptr &#x3D; img-&gt;imageData;
+    PixelBlock *res_ptr &#x3D; res-&gt;imageData;
 
-    //遍历计算结果
-    for (int i = 0; i &lt; area; i++)
+    &#x2F;&#x2F;遍历计算结果
+    for (int i &#x3D; 0; i &lt; area; i++)
     &#123;
-        boundary_check(i, img-&gt;height, img-&gt;width); //更新计算范围
+        boundary_check(i, img-&gt;height, img-&gt;width); &#x2F;&#x2F;更新计算范围
         copy(&amp;zeroPixel, &amp;res_ptr[i]);
 
-        //计算矩阵卷积
-        for (int j = 0; j &lt; 3; j++)
+        &#x2F;&#x2F;计算矩阵卷积
+        for (int j &#x3D; 0; j &lt; 3; j++)
         &#123;
-            for (int k = 0, ptr; k &lt; 3; k++)
+            for (int k &#x3D; 0, ptr; k &lt; 3; k++)
             &#123;
                 if (pixel_add[j][k])
                 &#123;
-                    ptr = i + leaplen[j * 3 + k];
+                    ptr &#x3D; i + leaplen[j * 3 + k];
                     add(&amp;img_ptr[ptr], &amp;res_ptr[i], kernel[j][k]);
                 &#125;
             &#125;
@@ -893,25 +908,25 @@ BMPImage *Convolution2D(BMPImage *img, const float (*kernel)[3])
 
 void boundary_check(int position, int height, int width)
 &#123;
-    for (int i = 0; i &lt; 3; i++)
+    for (int i &#x3D; 0; i &lt; 3; i++)
     &#123;
-        for (int j = 0; j &lt; 3; j++)
+        for (int j &#x3D; 0; j &lt; 3; j++)
         &#123;
-            pixel_add[i][j] = true;
+            pixel_add[i][j] &#x3D; true;
         &#125;
     &#125;
-    if (position / width == 0)
-        for (int i = 0; i &lt; 3; i++)
-            pixel_add[0][i] = false;
-    if (position / width == height - 1)
-        for (int i = 0; i &lt; 3; i++)
-            pixel_add[2][i] = false;
-    if (position % width == 0)
-        for (int i = 0; i &lt; 3; i++)
-            pixel_add[i][0] = false;
-    if (position % width == width - 1)
-        for (int i = 0; i &lt; 3; i++)
-            pixel_add[i][2] = false;
+    if (position &#x2F; width &#x3D;&#x3D; 0)
+        for (int i &#x3D; 0; i &lt; 3; i++)
+            pixel_add[0][i] &#x3D; false;
+    if (position &#x2F; width &#x3D;&#x3D; height - 1)
+        for (int i &#x3D; 0; i &lt; 3; i++)
+            pixel_add[2][i] &#x3D; false;
+    if (position % width &#x3D;&#x3D; 0)
+        for (int i &#x3D; 0; i &lt; 3; i++)
+            pixel_add[i][0] &#x3D; false;
+    if (position % width &#x3D;&#x3D; width - 1)
+        for (int i &#x3D; 0; i &lt; 3; i++)
+            pixel_add[i][2] &#x3D; false;
 
     return;
 &#125;;
@@ -925,37 +940,36 @@ void init(BMPImage *img)
         downleft, down,   downright
     &#125;;
 
-    leaplen[middle] = 0;
-    leaplen[up] = -img-&gt;width;
-    leaplen[left] = -1;
+    leaplen[middle] &#x3D; 0;
+    leaplen[up] &#x3D; -img-&gt;width;
+    leaplen[left] &#x3D; -1;
 
-    leaplen[upleft] = leaplen[up] + leaplen[left];
-    leaplen[upright] = leaplen[up] + leaplen[right];
+    leaplen[upleft] &#x3D; leaplen[up] + leaplen[left];
+    leaplen[upright] &#x3D; leaplen[up] + leaplen[right];
 
-    leaplen[down] = -leaplen[up];
-    leaplen[right] = -leaplen[left];
-    leaplen[downleft] = -leaplen[upright];
-    leaplen[downright] = -leaplen[upleft];
+    leaplen[down] &#x3D; -leaplen[up];
+    leaplen[right] &#x3D; -leaplen[left];
+    leaplen[downleft] &#x3D; -leaplen[upright];
+    leaplen[downright] &#x3D; -leaplen[upleft];
     return;
 &#125;
 
 void add(PixelBlock *adder, PixelBlock *addee, float times)
 &#123;
-    addee-&gt;R += (unsigned char)((float)adder-&gt;R * times);
-    addee-&gt;G += (unsigned char)((float)adder-&gt;G * times);
-    addee-&gt;B += (unsigned char)((float)adder-&gt;B * times);
+    addee-&gt;R +&#x3D; (unsigned char)((float)adder-&gt;R * times);
+    addee-&gt;G +&#x3D; (unsigned char)((float)adder-&gt;G * times);
+    addee-&gt;B +&#x3D; (unsigned char)((float)adder-&gt;B * times);
     return;
 &#125;;
 
 void copy(PixelBlock *copyer, PixelBlock *copyee)
 &#123;
-    copyee-&gt;R = copyer-&gt;R;
-    copyee-&gt;G = copyer-&gt;G;
-    copyee-&gt;B = copyer-&gt;B;
+    copyee-&gt;R &#x3D; copyer-&gt;R;
+    copyee-&gt;G &#x3D; copyer-&gt;G;
+    copyee-&gt;B &#x3D; copyer-&gt;B;
     return;
 &#125;;
-</code></pre>
-
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>

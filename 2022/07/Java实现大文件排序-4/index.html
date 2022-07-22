@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
 
 
 
@@ -443,7 +445,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    493
+                    490
                 </div>
                 
 
@@ -460,107 +462,111 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="大文件排序-排序归并"><a href="#大文件排序-排序归并" class="headerlink" title="大文件排序 (排序归并)"></a>大文件排序 (排序归并)</h1><h2 id="排序归并"><a href="#排序归并" class="headerlink" title="排序归并"></a>排序归并</h2><p><code>Sort</code>类提供对待排序文件排序并输出到给定文件的流程</p>
-<hr>
-<h3 id="FileFilter类"><a href="#FileFilter类" class="headerlink" title="FileFilter类"></a>FileFilter类</h3><p>首先用继承<code>FileFilter</code>接口的<code>AlphaFilter</code>类对文件夹中的文件进行过滤</p>
-<pre><code class="java">//AlphaFilter.java
-public class AlphaFilter implements FileFilter &#123;
-    final int Cut_i;//切分第几位
-    final int Filter_ch;//过滤的字母
+                <h1 id="大文件排序-排序归并"><a class="markdownIt-Anchor" href="#大文件排序-排序归并"></a> 大文件排序 （排序归并）</h1>
+<h2 id="排序归并"><a class="markdownIt-Anchor" href="#排序归并"></a> 排序归并</h2>
+<p><code>Sort</code>类提供对待排序文件排序并输出到给定文件的流程</p>
+<hr />
+<h3 id="filefilter类"><a class="markdownIt-Anchor" href="#filefilter类"></a> FileFilter类</h3>
+<p>首先用继承<code>FileFilter</code>接口的<code>AlphaFilter</code>类对文件夹中的文件进行过滤</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//AlphaFilter.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AlphaFilter</span> <span class="token keyword">implements</span> <span class="token class-name">FileFilter</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token class-name">Cut_i</span><span class="token punctuation">;</span><span class="token comment">//切分第几位</span>
+    <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token class-name">Filter_ch</span><span class="token punctuation">;</span><span class="token comment">//过滤的字母</span>
 
-    AlphaFilter(int i, char ch);//...
-    @Override
-    public boolean accept(File f) &#123;
-        return f.getName().charAt(Cut_i - 1) == Filter_ch;
-    &#125;
-&#125;
-</code></pre>
-<h3 id="Sort类"><a href="#Sort类" class="headerlink" title="Sort类"></a>Sort类</h3><p>具体实现如下</p>
-<pre><code class="java">//Sort.java类
-public class Sort extends Process &#123;
-    final File FNet;
-    final File FResult;
-    final int IP_idx;
-    final String IP_alpha;
+    <span class="token class-name">AlphaFilter</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token punctuation">,</span> <span class="token keyword">char</span> ch<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">accept</span><span class="token punctuation">(</span><span class="token class-name">File</span> f<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> f<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token class-name">Cut_i</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token class-name">Filter_ch</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="sort类"><a class="markdownIt-Anchor" href="#sort类"></a> Sort类</h3>
+<p>具体实现如下</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//Sort.java类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Sort</span> <span class="token keyword">extends</span> <span class="token class-name">Process</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token class-name">File</span> <span class="token class-name">FNet</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">File</span> <span class="token class-name">FResult</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token class-name">IP_idx</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">;</span>
 
-    Sort();//...
-    @Override
-    void handle(ProcessSwitch ps);//...
-    void SortFile() &#123;
-        try &#123;
-            long time = System.currentTimeMillis();
-            for (int i = 0; i &lt; IP_alpha.length(); i++) &#123;
-                //获取输出文件
-                File resultFile = FileSL.ResultFile(FResult, IP_alpha.charAt(i), IP_idx);
-                FileOutputStream fw = new FileOutputStream(resultFile);
-                //获取输入文件
-                AlphaFilter alpha = new AlphaFilter(1, IP_alpha.charAt(i));
-                File[] files = FNet.listFiles(alpha);
-                byte[] lines = new byte[CONST.PAK_CACHE];
-                if (files != null) &#123;
-                    FileInputStream fr;
-                    //写入文件
-                    for (File f : files) &#123;
-                        ArrayList&lt;Long&gt; longs = new ArrayList&lt;&gt;();
-                        fr = new FileInputStream(f);
-                        byte[] offset = new byte[]&#123;(byte) f.getName().charAt(0), (byte) f.getName().charAt(1)&#125;;
-                        int len;//判断读取长度，用于对最后一行数据特殊处理
-                        while ((len = fr.read(lines)) != -1) &#123;
-                            byte[] tmp;
-                            if (len &lt; CONST.PAK_CACHE) &#123;//判断是否为数据末尾
-                                tmp = new byte[len];
-                                System.arraycopy(lines, 0, tmp, 0, len);
-                            &#125; else tmp = lines.clone();
-                            THR.ExecWait();
-                            //注册子线程，用于提取包的数据并装入待排序数组
-                            THR.ThreadPool.execute(new addL(tmp, longs));
-                        &#125;
-                        THR.PoolWait();
-                        fr.close();
-                        //对数据进行排序
-                        longs.sort(Comparator.naturalOrder());
-                        for (Long along : longs) &#123;
-                            //将数据解压写入结果文件
-                            fw.write(Pack.dePack(along, offset));
-                        &#125;
-                        longs.clear();
-                        if (!CONST.debug) f.delete();
-                    &#125;
-                &#125;
-                fw.close();
-            &#125;
-        &#125; catch (IOException e) &#123;
-            throw new RuntimeException(e);
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<h3 id="addL任务类"><a href="#addL任务类" class="headerlink" title="addL任务类"></a>addL任务类</h3><p>用于提取给定的数据包中的长整型，并装入待排序容器中</p>
-<pre><code class="java">//addL.java
-public class addL implements Runnable &#123;
-    final byte[] data;
-    final ArrayList&lt;Long&gt; longs;
+    <span class="token class-name">Sort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">void</span> <span class="token function">handle</span><span class="token punctuation">(</span><span class="token class-name">ProcessSwitch</span> ps<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token keyword">void</span> <span class="token class-name">SortFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">long</span> time <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token comment">//获取输出文件</span>
+                <span class="token class-name">File</span> resultFile <span class="token operator">=</span> <span class="token class-name">FileSL<span class="token punctuation">.</span>ResultFile</span><span class="token punctuation">(</span><span class="token class-name">FResult</span><span class="token punctuation">,</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">IP_idx</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">FileOutputStream</span> fw <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span>resultFile<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment">//获取输入文件</span>
+                <span class="token class-name">AlphaFilter</span> alpha <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AlphaFilter</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token class-name">IP_alpha</span><span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">File</span><span class="token punctuation">[</span><span class="token punctuation">]</span> files <span class="token operator">=</span> <span class="token class-name">FNet</span><span class="token punctuation">.</span><span class="token function">listFiles</span><span class="token punctuation">(</span>alpha<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lines <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>CONST<span class="token punctuation">.</span>PAK_CACHE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>files <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token class-name">FileInputStream</span> fr<span class="token punctuation">;</span>
+                    <span class="token comment">//写入文件</span>
+                    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">File</span> f <span class="token operator">:</span> files<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">></span></span> longs <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        fr <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> offset <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">&#123;</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">)</span> f<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">)</span> f<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+                        <span class="token keyword">int</span> len<span class="token punctuation">;</span><span class="token comment">//判断读取长度，用于对最后一行数据特殊处理</span>
+                        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>len <span class="token operator">=</span> fr<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>lines<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                            <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> tmp<span class="token punctuation">;</span>
+                            <span class="token keyword">if</span> <span class="token punctuation">(</span>len <span class="token operator">&lt;</span> CONST<span class="token punctuation">.</span>PAK_CACHE<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">//判断是否为数据末尾</span>
+                                tmp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>len<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                                <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">arraycopy</span><span class="token punctuation">(</span>lines<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> tmp<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> len<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> tmp <span class="token operator">=</span> lines<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token class-name">THR<span class="token punctuation">.</span>ExecWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token comment">//注册子线程，用于提取包的数据并装入待排序数组</span>
+                            <span class="token class-name">THR<span class="token punctuation">.</span>ThreadPool</span><span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token function">addL</span><span class="token punctuation">(</span>tmp<span class="token punctuation">,</span> longs<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">&#125;</span>
+                        <span class="token class-name">THR<span class="token punctuation">.</span>PoolWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        fr<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token comment">//对数据进行排序</span>
+                        longs<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token class-name">Comparator</span><span class="token punctuation">.</span><span class="token function">naturalOrder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Long</span> along <span class="token operator">:</span> longs<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                            <span class="token comment">//将数据解压写入结果文件</span>
+                            fw<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token class-name">Pack</span><span class="token punctuation">.</span><span class="token function">dePack</span><span class="token punctuation">(</span>along<span class="token punctuation">,</span> offset<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">&#125;</span>
+                        longs<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>CONST<span class="token punctuation">.</span>debug<span class="token punctuation">)</span> f<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span>
+                <span class="token punctuation">&#125;</span>
+                fw<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="addl任务类"><a class="markdownIt-Anchor" href="#addl任务类"></a> addL任务类</h3>
+<p>用于提取给定的数据包中的长整型，并装入待排序容器中</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//addL.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> addL <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">></span></span> longs<span class="token punctuation">;</span>
 
-    addL(byte[] data, ArrayList&lt;Long&gt; longs);//...
-    @Override
-    public void run() &#123;
-        for (int ptr = 0; ptr &lt; data.length; ptr += CONST.PAK_LEN) &#123;
-            if (data[ptr] != 0) &#123;
-                long aLong = Pack.cut(data, ptr);
-                synchronized (longs) &#123;
-                    longs.add(aLong);
-                &#125;
-            &#125;
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-
+    <span class="token function">addL</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">,</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">></span></span> longs<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//...</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> ptr <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> ptr <span class="token operator">&lt;</span> data<span class="token punctuation">.</span>length<span class="token punctuation">;</span> ptr <span class="token operator">+=</span> CONST<span class="token punctuation">.</span>PAK_LEN<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">[</span>ptr<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">long</span> aLong <span class="token operator">=</span> <span class="token class-name">Pack</span><span class="token punctuation">.</span><span class="token function">cut</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> ptr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>longs<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    longs<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>aLong<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
@@ -894,6 +900,13 @@ public class addL implements Runnable &#123;
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 
 

@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
 
 
 
@@ -460,244 +462,266 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="大文件排序（流程、切分与解压缩）"><a href="#大文件排序（流程、切分与解压缩）" class="headerlink" title="大文件排序（流程、切分与解压缩）"></a>大文件排序（流程、切分与解压缩）</h1><h2 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h2><hr>
+                <h1 id="大文件排序流程-切分与解压缩"><a class="markdownIt-Anchor" href="#大文件排序流程-切分与解压缩"></a> 大文件排序（流程、切分与解压缩）</h1>
+<h2 id="流程控制"><a class="markdownIt-Anchor" href="#流程控制"></a> 流程控制</h2>
+<hr />
 <p>采用状态模式，将程序运行的几个部分分为对应状态，使用流程切换器实现流程控制</p>
-<h3 id="流程-Process"><a href="#流程-Process" class="headerlink" title="流程 Process"></a>流程 <code>Process</code></h3><p>流程类是一个抽象类，只有一个抽象方法 <code>handle()</code></p>
-<pre><code class="java">//Process.java
-public abstract class Process &#123;
-    abstract void handle(ProcessSwitch ps);
-&#125;
-</code></pre>
-<h3 id="流程枚举类-ProcessState"><a href="#流程枚举类-ProcessState" class="headerlink" title="流程枚举类 ProcessState"></a>流程枚举类 ProcessState</h3><p>流程枚举提供了流程的枚举、迭代方法与区间判断方法</p>
-<pre><code class="java">//ProcessState.java
-public enum ProcessState &#123;
-    Cut,//切分
-    NetConnect,//网络链接
-    NetStream,//网络流
-    Sort,//排序归并
-    private static final ProcessState[] VALUES = values();
+<h3 id="流程-process"><a class="markdownIt-Anchor" href="#流程-process"></a> 流程 <code>Process</code></h3>
+<p>流程类是一个抽象类，只有一个抽象方法 <code>handle()</code></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//Process.java</span>
+<span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">Process</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">abstract</span> <span class="token keyword">void</span> <span class="token function">handle</span><span class="token punctuation">(</span><span class="token class-name">ProcessSwitch</span> ps<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="流程枚举类-processstate"><a class="markdownIt-Anchor" href="#流程枚举类-processstate"></a> 流程枚举类 ProcessState</h3>
+<p>流程枚举提供了流程的枚举、迭代方法与区间判断方法</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//ProcessState.java</span>
+<span class="token keyword">public</span> <span class="token keyword">enum</span> <span class="token class-name">ProcessState</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">Cut</span><span class="token punctuation">,</span><span class="token comment">//切分</span>
+    <span class="token class-name">NetConnect</span><span class="token punctuation">,</span><span class="token comment">//网络链接</span>
+    <span class="token class-name">NetStream</span><span class="token punctuation">,</span><span class="token comment">//网络流</span>
+    <span class="token class-name">Sort</span><span class="token punctuation">,</span><span class="token comment">//排序归并</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">ProcessState</span><span class="token punctuation">[</span><span class="token punctuation">]</span> VALUES <span class="token operator">=</span> <span class="token function">values</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    public ProcessState previous() &#123;//前一个枚举
-        return VALUES[(this.ordinal() - 1) % VALUES.length];
-    &#125;
+    <span class="token keyword">public</span> <span class="token class-name">ProcessState</span> <span class="token function">previous</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">//前一个枚举</span>
+        <span class="token keyword">return</span> VALUES<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">ordinal</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">%</span> VALUES<span class="token punctuation">.</span>length<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    public ProcessState next() &#123;//后一个枚举
-        return VALUES[(this.ordinal() + 1) % VALUES.length];
-    &#125;
+    <span class="token keyword">public</span> <span class="token class-name">ProcessState</span> <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">//后一个枚举</span>
+        <span class="token keyword">return</span> VALUES<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">ordinal</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">%</span> VALUES<span class="token punctuation">.</span>length<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    public Boolean Between(ProcessState start, ProcessState end) &#123;
-        return this.ordinal() &gt;= start.ordinal() &amp;&amp; this.ordinal() &lt; end.ordinal();
-    &#125;
-&#125;
-</code></pre>
-<h3 id="流程切换器-ProcessSwitch"><a href="#流程切换器-ProcessSwitch" class="headerlink" title="流程切换器 ProcessSwitch"></a>流程切换器 <code>ProcessSwitch</code></h3><p>流程切换器储存着当前流程与当前状态，提供了控制流程进度的方法</p>
-<pre><code class="java">//ProcessSwitch.java
-public class ProcessSwitch &#123;
-    Process p_now;//当前流程
-    ProcessState t_now;//当前状态
+    <span class="token keyword">public</span> <span class="token class-name">Boolean</span> <span class="token class-name">Between</span><span class="token punctuation">(</span><span class="token class-name">ProcessState</span> start<span class="token punctuation">,</span> <span class="token class-name">ProcessState</span> end<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">ordinal</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">>=</span> start<span class="token punctuation">.</span><span class="token function">ordinal</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">ordinal</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> end<span class="token punctuation">.</span><span class="token function">ordinal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="流程切换器-processswitch"><a class="markdownIt-Anchor" href="#流程切换器-processswitch"></a> 流程切换器 <code>ProcessSwitch</code></h3>
+<p>流程切换器储存着当前流程与当前状态，提供了控制流程进度的方法</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//ProcessSwitch.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ProcessSwitch</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">Process</span> p_now<span class="token punctuation">;</span><span class="token comment">//当前流程</span>
+    <span class="token class-name">ProcessState</span> t_now<span class="token punctuation">;</span><span class="token comment">//当前状态</span>
 
-    //构造方法
-    public ProcessSwitch() &#123;
-        this(ProcessState.Cut);
-    &#125;
+    <span class="token comment">//构造方法</span>
+    <span class="token keyword">public</span> <span class="token class-name">ProcessSwitch</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">(</span><span class="token class-name">ProcessState<span class="token punctuation">.</span>Cut</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    public ProcessSwitch(ProcessState t_now) &#123;
-        p_now = new Cut();
-        this.t_now = t_now;
-    &#125;
+    <span class="token keyword">public</span> <span class="token class-name">ProcessSwitch</span><span class="token punctuation">(</span><span class="token class-name">ProcessState</span> t_now<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        p_now <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cut</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>t_now <span class="token operator">=</span> t_now<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    //流程运行方法
-    void Run() &#123;
-        p_now.handle(this);//调用流程
-        t_now = t_now.next();//切换状态
-    &#125;
-&#125;
-</code></pre>
+    <span class="token comment">//流程运行方法</span>
+    <span class="token keyword">void</span> <span class="token class-name">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        p_now<span class="token punctuation">.</span><span class="token function">handle</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//调用流程</span>
+        t_now <span class="token operator">=</span> t_now<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//切换状态</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><code>Entry</code>类中用流程控制器控制流程运行</p>
-<pre><code class="java">//Entry.java
-public static void main(String[]args)&#123;
-        //...
-        //实例化流程切换器对象并确定初始状态
-        ProcessSwitch ps=new ProcessSwitch(ProcessState.Cut);
-        //运用状态模式控制流程
-        ps.Run();
-        //调整当前流程以方便调试
-        ps.t_now=ProcessState.Sort;
-        ps.Run();
-        ps.Run();
-        //...
-        &#125;
-</code></pre>
-<h2 id="切分流程"><a href="#切分流程" class="headerlink" title="切分流程"></a>切分流程</h2><hr>
-<h3 id="重写handle"><a href="#重写handle" class="headerlink" title="重写handle()"></a>重写handle()</h3><p>首先以 <code>Cut</code>为例说明 <code>handle()</code>方法，之后不再赘述</p>
-<pre><code class="java">//Cut.java
-public class Cut extends Process &#123;
-    final File FIn;
-    final File FOut;
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//Entry.java</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span>args<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        <span class="token comment">//...</span>
+        <span class="token comment">//实例化流程切换器对象并确定初始状态</span>
+        <span class="token class-name">ProcessSwitch</span> ps<span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">ProcessSwitch</span><span class="token punctuation">(</span><span class="token class-name">ProcessState<span class="token punctuation">.</span>Cut</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//运用状态模式控制流程</span>
+        <span class="token class-name"><span class="token namespace">ps<span class="token punctuation">.</span></span>Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//调整当前流程以方便调试</span>
+        ps<span class="token punctuation">.</span>t_now<span class="token operator">=</span><span class="token class-name">ProcessState<span class="token punctuation">.</span>Sort</span><span class="token punctuation">;</span>
+        <span class="token class-name"><span class="token namespace">ps<span class="token punctuation">.</span></span>Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name"><span class="token namespace">ps<span class="token punctuation">.</span></span>Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//...</span>
+        <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="切分流程"><a class="markdownIt-Anchor" href="#切分流程"></a> 切分流程</h2>
+<hr />
+<h3 id="重写handle"><a class="markdownIt-Anchor" href="#重写handle"></a> 重写<code>handle()</code></h3>
+<p>首先以 <code>Cut</code>为例说明 <code>handle()</code>方法，之后不再赘述</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//Cut.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Cut</span> <span class="token keyword">extends</span> <span class="token class-name">Process</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token class-name">File</span> <span class="token class-name">FIn</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">File</span> <span class="token class-name">FOut</span><span class="token punctuation">;</span>
 
-    Cut() &#123;
-        FIn = CONST.optFiles.FInput;
-        FOut = CONST.optFiles.FOutput;
-    &#125;
+    <span class="token class-name">Cut</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">FIn</span> <span class="token operator">=</span> CONST<span class="token punctuation">.</span>optFiles<span class="token punctuation">.</span>FInput<span class="token punctuation">;</span>
+        <span class="token class-name">FOut</span> <span class="token operator">=</span> CONST<span class="token punctuation">.</span>optFiles<span class="token punctuation">.</span>FOutput<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    @Override
-//重写handle方法
-    void handle(ProcessSwitch ps) &#123;
-        //判断当前状态是否对应，否则进入下一流程
-        if (ps.t_now == ProcessState.Cut) &#123;
-            System.out.println(&quot;开始切分&quot;);
-            Cutting();//调用切分方法
-            System.out.println(&quot;切分完成&quot;);
-        &#125; else &#123;
-            //装载下一流程
-            ps.p_now = new NetConnect();
-            //调用下一流程，实现流程切换
-            ps.p_now.handle(ps);
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<h3 id="Cut类"><a href="#Cut类" class="headerlink" title="Cut类"></a>Cut类</h3><ol>
+    <span class="token annotation punctuation">@Override</span>
+<span class="token comment">//重写handle方法</span>
+    <span class="token keyword">void</span> <span class="token function">handle</span><span class="token punctuation">(</span><span class="token class-name">ProcessSwitch</span> ps<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">//判断当前状态是否对应，否则进入下一流程</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>ps<span class="token punctuation">.</span>t_now <span class="token operator">==</span> <span class="token class-name">ProcessState<span class="token punctuation">.</span>Cut</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"开始切分"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">Cutting</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//调用切分方法</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"切分完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">//装载下一流程</span>
+            ps<span class="token punctuation">.</span>p_now <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NetConnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//调用下一流程，实现流程切换</span>
+            ps<span class="token punctuation">.</span>p_now<span class="token punctuation">.</span><span class="token function">handle</span><span class="token punctuation">(</span>ps<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="cut类"><a class="markdownIt-Anchor" href="#cut类"></a> Cut类</h3>
+<ol>
 <li>初始化</li>
 <li>生成文件流</li>
-<li>生成 26*26个文件，直接对应二次切分后的文件 ({首字母}{次字母}.txt)</li>
-<li>读取并交由多线程切分(读取与切分并发以提高效率)</li>
+<li>生成 26*26个文件，直接对应二次切分后的文件 （{首字母}{次字母}.txt）</li>
+<li>读取并交由多线程切分（读取与切分并发以提高效率）</li>
 <li>收尾，等待线程结束，删除重复文件</li>
 </ol>
-<pre><code class="java">void Cutting()&#123;
-    //初始化
-    File[]files;
-    FileOutputStream[]fW=new FileOutputStream[CONST.ALPHA_NUM*CONST.ALPHA_NUM];
-    byte[]lines=new byte[CONST.BYTE_CACHE];
-    try&#123;
-        //生成流与文件
-        files=FIn.listFiles();
-        for(int i=0;i&lt;CONST.ALPHA_NUM;i++)&#123;
-            for(int j=0;j&lt;CONST.ALPHA_NUM;j++)&#123;
-                fW[i*CONST.ALPHA_NUM+j]=new FileOutputStream(FileSL.CharFile(FOut,(char)(i+&#39;a&#39;),(char)(j+&#39;a&#39;)));
-            &#125;
-        &#125;
-        //开始读取并切分
-        //读取输入文件夹下所有文件并开始一一切分
-        for(File f:files!=null?files:new File[0])&#123;
-            FileInputStream fR=new FileInputStream(f);
-            while((fR.read(lines))!=-1)&#123;
-                //读取CONST.BYTE_CACHE长度的字节并拷贝提交为任务
-                //运用线程池处理任务
-                //此处向线程传递lines的拷贝值而非引用
-                THR.ThreadPool.execute(new CutterThr(lines.clone(),fW));
-            &#125;
-            //关闭流,等待线程结束，删除重复文件
-            THR.PoolWait();
-            fR.close();
-            if(!CONST.debug)f.delete();
-        &#125;
-        for(FileOutputStream fw:fW)&#123;
-            fw.close();
-        &#125;
-    &#125;catch(IOException e)&#123;
-        e.printStackTrace(CONST.getErrorLog());
-    &#125;
-&#125;
-</code></pre>
-<h3 id="CutterThr切分任务类"><a href="#CutterThr切分任务类" class="headerlink" title="CutterThr切分任务类"></a>CutterThr切分任务类</h3><pre><code class="java">//CutterThr.java
-public class CutterThr implements Runnable &#123;
-    final byte[] lines;//待切分字节缓存
-    final FileOutputStream[] fW;//输出区
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">void</span> <span class="token class-name">Cutting</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token comment">//初始化</span>
+    <span class="token class-name">File</span><span class="token punctuation">[</span><span class="token punctuation">]</span>files<span class="token punctuation">;</span>
+    <span class="token class-name">FileOutputStream</span><span class="token punctuation">[</span><span class="token punctuation">]</span>fW<span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">[</span>CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token operator">*</span>CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span>lines<span class="token operator">=</span><span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>CONST<span class="token punctuation">.</span>BYTE_CACHE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span><span class="token punctuation">&#123;</span>
+        <span class="token comment">//生成流与文件</span>
+        files<span class="token operator">=</span><span class="token class-name">FIn</span><span class="token punctuation">.</span><span class="token function">listFiles</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+            <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>j<span class="token operator">&lt;</span>CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+                fW<span class="token punctuation">[</span>i<span class="token operator">*</span>CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token operator">+</span>j<span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span><span class="token class-name">FileSL<span class="token punctuation">.</span>CharFile</span><span class="token punctuation">(</span><span class="token class-name">FOut</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">)</span><span class="token punctuation">(</span>i<span class="token operator">+</span><span class="token char">'a'</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">)</span><span class="token punctuation">(</span>j<span class="token operator">+</span><span class="token char">'a'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token comment">//开始读取并切分</span>
+        <span class="token comment">//读取输入文件夹下所有文件并开始一一切分</span>
+        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token class-name">File</span> f<span class="token operator">:</span>files<span class="token operator">!=</span><span class="token keyword">null</span><span class="token operator">?</span>files<span class="token operator">:</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+            <span class="token class-name">FileInputStream</span> fR<span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token punctuation">(</span>fR<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>lines<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">!=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+                <span class="token comment">//读取CONST.BYTE_CACHE长度的字节并拷贝提交为任务</span>
+                <span class="token comment">//运用线程池处理任务</span>
+                <span class="token comment">//此处向线程传递lines的拷贝值而非引用</span>
+                <span class="token class-name">THR<span class="token punctuation">.</span>ThreadPool</span><span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CutterThr</span><span class="token punctuation">(</span>lines<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>fW<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token comment">//关闭流,等待线程结束，删除重复文件</span>
+            <span class="token class-name">THR<span class="token punctuation">.</span>PoolWait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            fR<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>CONST<span class="token punctuation">.</span>debug<span class="token punctuation">)</span>f<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token class-name">FileOutputStream</span> fw<span class="token operator">:</span>fW<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+            fw<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span>CONST<span class="token punctuation">.</span><span class="token function">getErrorLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="cutterthr切分任务类"><a class="markdownIt-Anchor" href="#cutterthr切分任务类"></a> CutterThr切分任务类</h3>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//CutterThr.java</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CutterThr</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">final</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lines<span class="token punctuation">;</span><span class="token comment">//待切分字节缓存</span>
+    <span class="token keyword">final</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">[</span><span class="token punctuation">]</span> fW<span class="token punctuation">;</span><span class="token comment">//输出区</span>
 
-    CutterThr(byte[] lines, FileOutputStream[] fW) &#123;
-        this.lines = lines;
-        this.fW = fW;
-    &#125;
+    <span class="token class-name">CutterThr</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lines<span class="token punctuation">,</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">[</span><span class="token punctuation">]</span> fW<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>lines <span class="token operator">=</span> lines<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>fW <span class="token operator">=</span> fW<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    public void run() &#123;
-        try &#123;
-            //遍历每一行，将该行压缩并输出到对应文件
-            for (int ptr = 0, id; ptr &lt; lines.length; ptr += CONST.WORD_LEN) &#123;
-                if (lines[ptr] == 0) continue;//跳过空行
-                //确定写入的流
-                id = (CONST.b2i((byte) (lines[ptr] - &#39;a&#39;)) * CONST.ALPHA_NUM + CONST.b2i((byte) (lines[ptr + 1] - &#39;a&#39;)));
-                //压缩字节 (16 -&gt; 10)
-                byte[] line = Pack.pack(ptr, lines);
-                if (line != null) &#123;
-                    //进行写入操作
-                    synchronized (fW[id]) &#123;
-                        fW[id].write(line);
-                    &#125;
-                &#125;
-            &#125;
-        &#125; catch (Exception e) &#123;
-            e.printStackTrace(CONST.getErrorLog());
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<h2 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h2><h3 id="原始数据分析"><a href="#原始数据分析" class="headerlink" title="原始数据分析:"></a>原始数据分析:</h3><p>源数据由 15 字节的小写字母与 1 个’\n’构成(格式问题，公式中写为’/n’)<br>$<br>\begin{array}{}<br>设S &amp;= “ab” + “cdefghijklmno” + “/n”\<br>    &amp;= t + s + “/n”\<br>\end{array}<br>$</p>
-<p>对于s,其信息量为<br>$<br>\begin{array}{}<br>26^{13} &amp;= 2,481,152,873,203,736,576\<br>        &amp;&lt; 256^8 = LONG_MAX\<br>\end{array}<br>$</p>
-<p>即 s 可用 8 字节的长整型来无损表示<br>再将t作为索引，去掉结尾的’\n’,<br>则长度为 16 字节的 S 可用 10 个字节来IO,<br>而多线程操作时可用 8 个字节来传递</p>
-<h3 id="Pack类"><a href="#Pack类" class="headerlink" title="Pack类"></a>Pack类</h3><p>设计 <code>Pack</code>类来处理解压缩操作</p>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">//遍历每一行，将该行压缩并输出到对应文件</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> ptr <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> id<span class="token punctuation">;</span> ptr <span class="token operator">&lt;</span> lines<span class="token punctuation">.</span>length<span class="token punctuation">;</span> ptr <span class="token operator">+=</span> CONST<span class="token punctuation">.</span>WORD_LEN<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>lines<span class="token punctuation">[</span>ptr<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span><span class="token comment">//跳过空行</span>
+                <span class="token comment">//确定写入的流</span>
+                id <span class="token operator">=</span> <span class="token punctuation">(</span>CONST<span class="token punctuation">.</span><span class="token function">b2i</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>lines<span class="token punctuation">[</span>ptr<span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token char">'a'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span> CONST<span class="token punctuation">.</span>ALPHA_NUM <span class="token operator">+</span> CONST<span class="token punctuation">.</span><span class="token function">b2i</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>lines<span class="token punctuation">[</span>ptr <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token char">'a'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token comment">//压缩字节 (16 -> 10)</span>
+                <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> line <span class="token operator">=</span> <span class="token class-name">Pack</span><span class="token punctuation">.</span><span class="token function">pack</span><span class="token punctuation">(</span>ptr<span class="token punctuation">,</span> lines<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>line <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token comment">//进行写入操作</span>
+                    <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>fW<span class="token punctuation">[</span>id<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        fW<span class="token punctuation">[</span>id<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span>CONST<span class="token punctuation">.</span><span class="token function">getErrorLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="解压缩"><a class="markdownIt-Anchor" href="#解压缩"></a> 解压缩</h2>
+<h3 id="原始数据分析"><a class="markdownIt-Anchor" href="#原始数据分析"></a> 原始数据分析:</h3>
+<p>源数据由 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>15</mn></mrow><annotation encoding="application/x-tex">15</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">5</span></span></span></span> 字节的小写字母与 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 个’\n’构成（格式问题，公式中写为’/n’）<br />
+
+\begin{array}{}
+设S &= "ab" + "cdefghijklmno" + “/n”\\
+    &= t + s + “/n”\\
+\end{array}
+</p>
+<p>对于s,其信息量为<br />
+
+\begin{array}{}
+26^{13} &= 2,481,152,873,203,736,576\\
+        &< 256^8 = LONG\_MAX\\
+\end{array}
+</p>
+<p>即 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span></span></span></span> 可用 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 字节的长整型来无损表示<br />
+再将<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span></span></span></span>作为索引，去掉结尾的’\n’,<br />
+则长度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>16</mn></mrow><annotation encoding="application/x-tex">16</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">6</span></span></span></span> 字节的 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span></span> 可用 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>10</mn></mrow><annotation encoding="application/x-tex">10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span></span></span></span> 个字节来IO,<br />
+而多线程操作时可用 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>8</mn></mrow><annotation encoding="application/x-tex">8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> 个字节来传递</p>
+<h3 id="pack类"><a class="markdownIt-Anchor" href="#pack类"></a> Pack类</h3>
+<p>设计<code>Pack</code>类来处理解压缩操作</p>
 <p>整个过程的转换为:</p>
 <p><code>data(源数据)</code> - <code>pak(压缩包数据)</code> - <code>data(源数据)</code></p>
-<pre><code class="java">//Pack.java
-//对单行进行压缩与解压操作
-public class Pack &#123;
-    //输入缓存数据与行数，输出缓存数据中该行数对应的压缩字节串
-    static byte[] pack(int ptr, byte[] data) &#123;
-        if (data[ptr] == 0) return null;//判断空字符
-        byte[] pak = new byte[CONST.PAK_LEN];
-        //获得头两位字母的索引
-        pak[0] = data[ptr];
-        pak[1] = data[ptr + 1];
-        //压缩字符
-        long base = 1;//word的进制基底
-        long res = 0;
-        for (int j = 2; j &lt; CONST.WORD_LEN; j++) &#123;
-            res += (CONST.b2i(data[ptr + j]) - &#39;a&#39;) * base;
-            base *= CONST.ALPHA_NUM;
-        &#125;
-        byte[] tmpl = l2b(res);
-        System.arraycopy(tmpl, 0, pak, 2, CONST.PAK_LEN - 2);
-        return pak;
-    &#125;
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//Pack.java</span>
+<span class="token comment">//对单行进行压缩与解压操作</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Pack</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//输入缓存数据与行数，输出缓存数据中该行数对应的压缩字节串</span>
+    <span class="token keyword">static</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">pack</span><span class="token punctuation">(</span><span class="token keyword">int</span> ptr<span class="token punctuation">,</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">[</span>ptr<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span><span class="token comment">//判断空字符</span>
+        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> pak <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>CONST<span class="token punctuation">.</span>PAK_LEN<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment">//获得头两位字母的索引</span>
+        pak<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> data<span class="token punctuation">[</span>ptr<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        pak<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> data<span class="token punctuation">[</span>ptr <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment">//压缩字符</span>
+        <span class="token keyword">long</span> base <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span><span class="token comment">//word的进制基底</span>
+        <span class="token keyword">long</span> res <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> CONST<span class="token punctuation">.</span>WORD_LEN<span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            res <span class="token operator">+=</span> <span class="token punctuation">(</span>CONST<span class="token punctuation">.</span><span class="token function">b2i</span><span class="token punctuation">(</span>data<span class="token punctuation">[</span>ptr <span class="token operator">+</span> j<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token char">'a'</span><span class="token punctuation">)</span> <span class="token operator">*</span> base<span class="token punctuation">;</span>
+            base <span class="token operator">*=</span> CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> tmpl <span class="token operator">=</span> <span class="token function">l2b</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">arraycopy</span><span class="token punctuation">(</span>tmpl<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> pak<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> CONST<span class="token punctuation">.</span>PAK_LEN <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> pak<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    //输入压缩后的长整型与索引字节，输出对应的解压字节串
-    static byte[] dePack(Long along, byte[] offset) &#123;
-        byte[] data = new byte[CONST.WORD_LEN];
-        //解压
-        data[0] = offset[0];
-        data[1] = offset[1];
-        for (int i = data.length - 2; i &gt;= 2; i--) &#123;
-            data[i] = (byte) ((along % CONST.ALPHA_NUM) + &#39;a&#39;);
-            along /= CONST.ALPHA_NUM;
-        &#125;
-        data[CONST.WORD_LEN - 1] = (byte) &#39;\n&#39;;
-        return data;
-    &#125;
+    <span class="token comment">//输入压缩后的长整型与索引字节，输出对应的解压字节串</span>
+    <span class="token keyword">static</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">dePack</span><span class="token punctuation">(</span><span class="token class-name">Long</span> along<span class="token punctuation">,</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> offset<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>CONST<span class="token punctuation">.</span>WORD_LEN<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment">//解压</span>
+        data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> offset<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        data<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> offset<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> data<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">2</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            data<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>along <span class="token operator">%</span> CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token char">'a'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            along <span class="token operator">/=</span> CONST<span class="token punctuation">.</span>ALPHA_NUM<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        data<span class="token punctuation">[</span>CONST<span class="token punctuation">.</span>WORD_LEN <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">)</span> <span class="token char">'\n'</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> data<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    //输入包数据与行数，输出对应行数单词的压缩后长整型
-    static long cut(byte[] lines, int begin) &#123;
-        return b2l(lines, begin + 2);
-    &#125;
+    <span class="token comment">//输入包数据与行数，输出对应行数单词的压缩后长整型</span>
+    <span class="token keyword">static</span> <span class="token keyword">long</span> <span class="token function">cut</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> lines<span class="token punctuation">,</span> <span class="token keyword">int</span> begin<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token function">b2l</span><span class="token punctuation">(</span>lines<span class="token punctuation">,</span> begin <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    //将长整型转化为字节数组
-    public static byte[] l2b(long value) &#123;
-        return ByteBuffer.allocate(Long.SIZE / Byte.SIZE).putLong(value).array();
-    &#125;
+    <span class="token comment">//将长整型转化为字节数组</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">l2b</span><span class="token punctuation">(</span><span class="token keyword">long</span> value<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token class-name">ByteBuffer</span><span class="token punctuation">.</span><span class="token function">allocate</span><span class="token punctuation">(</span><span class="token class-name">Long</span><span class="token punctuation">.</span>SIZE <span class="token operator">/</span> <span class="token class-name">Byte</span><span class="token punctuation">.</span>SIZE<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">putLong</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">array</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    //将字节数组转化为长整型
-    public static long b2l(byte[] bytes, int begin) &#123;
-        ByteBuffer buffer = ByteBuffer.allocate(8);
-        buffer.put(bytes, begin, 8);
-        buffer.flip();
-        return buffer.getLong();
-    &#125;
-&#125;
-</code></pre>
+    <span class="token comment">//将字节数组转化为长整型</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">long</span> <span class="token function">b2l</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> bytes<span class="token punctuation">,</span> <span class="token keyword">int</span> begin<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">ByteBuffer</span> buffer <span class="token operator">=</span> <span class="token class-name">ByteBuffer</span><span class="token punctuation">.</span><span class="token function">allocate</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        buffer<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>bytes<span class="token punctuation">,</span> begin<span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        buffer<span class="token punctuation">.</span><span class="token function">flip</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> buffer<span class="token punctuation">.</span><span class="token function">getLong</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
                 
             </div>
@@ -1030,6 +1054,13 @@ public class Pack &#123;
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 
 

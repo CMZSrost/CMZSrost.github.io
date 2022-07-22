@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
 
 
 
@@ -460,109 +462,115 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>受数学课上行列式解线性方程组的启发，做了一个用初等行变换解行列式的程序，以下介绍具体代码（全局代码放在文末）</p>
+                <h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
+<p>受数学课上行列式解线性方程组的启发，做了一个用初等行变换解行列式的程序，以下介绍具体代码（全局代码放在文末）</p>
 <p>程序由三部分组成：输入处理，初等行变换计算与越界判断，结果输出。（略去初始化等细节）</p>
-<h2 id="输入处理"><a href="#输入处理" class="headerlink" title="输入处理"></a>输入处理</h2><p>首先规定输入规则：</p>
+<h2 id="输入处理"><a class="markdownIt-Anchor" href="#输入处理"></a> 输入处理</h2>
+<p>首先规定输入规则：</p>
 <ul>
-<li>‘ ‘表示输入单个数值</li>
+<li>’ '表示输入单个数值</li>
 <li>‘\n’（回车）表示已输入一行</li>
-<li>‘#’表示输入完毕</li>
-<li>数字0~9以及+-.直接读取</li>
+<li>'#'表示输入完毕</li>
+<li>数字0~9以及±.直接读取</li>
 <li>忽略其余字符</li>
 </ul>
-<pre><code class="C++">//martix是用来存储行列式整体的变量
-string tmp;//存储单个数值的变量
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">&#x2F;&#x2F;martix是用来存储行列式整体的变量
+string tmp;&#x2F;&#x2F;存储单个数值的变量
 char ch;
-double res=1.0;
-vector&lt;double&gt;path;//临时存储单行数据
-entry://输入处理起点
+double res&#x3D;1.0;
+vector&lt;double&gt;path;&#x2F;&#x2F;临时存储单行数据
+entry:&#x2F;&#x2F;输入处理起点
 while(cin.get(ch))&#123;
-    if(ch==&#39; &#39;)&#123;
+    if(ch&#x3D;&#x3D;&#39; &#39;)&#123;
         if(tmp.size())path.push_back(stod(tmp));
-        tmp.clear();//数据填入单行并清除临时值
-    &#125;else if(ch==&#39;\n&#39;)&#123;
+        tmp.clear();&#x2F;&#x2F;数据填入单行并清除临时值
+    &#125;else if(ch&#x3D;&#x3D;&#39;\n&#39;)&#123;
         if(tmp.size())path.push_back(stod(tmp));
         tmp.clear();
         if(path.size())martix.push_back(path);
-        path.clear();//单行填入行列式并清除临时行
-    &#125;else if(ch==&#39;.&#39;||ch==&#39;+&#39;||ch==&#39;-&#39;)&#123;
-        tmp+=ch;
-    &#125;else if(ch&gt;=&#39;0&#39;&amp;&amp;ch&lt;=&#39;9&#39;)&#123;
-        tmp+=ch;
-    &#125;else if(ch==&#39;#&#39;)&#123;
+        path.clear();&#x2F;&#x2F;单行填入行列式并清除临时行
+    &#125;else if(ch&#x3D;&#x3D;&#39;.&#39;||ch&#x3D;&#x3D;&#39;+&#39;||ch&#x3D;&#x3D;&#39;-&#39;)&#123;
+        tmp+&#x3D;ch;
+    &#125;else if(ch&gt;&#x3D;&#39;0&#39;&amp;&amp;ch&lt;&#x3D;&#39;9&#39;)&#123;
+        tmp+&#x3D;ch;
+    &#125;else if(ch&#x3D;&#x3D;&#39;#&#39;)&#123;
         break;
     &#125;
 &#125;
-//判断是否输入错误，以防越界
-if(martix.size()!=martix[0].size())&#123;
+&#x2F;&#x2F;判断是否输入错误，以防越界
+if(martix.size()!&#x3D;martix[0].size())&#123;
     system(&quot;cls&quot;);
     cout&lt;&lt;&quot;error input,retyr plz!\n&quot;;
     goto entry;
-&#125;
-</code></pre>
-<h2 id="初等行变换计算（与越界判断）"><a href="#初等行变换计算（与越界判断）" class="headerlink" title="初等行变换计算（与越界判断）"></a>初等行变换计算（与越界判断）</h2><p>接着对构建完成的行列式进行处理并运算</p>
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="初等行变换计算与越界判断"><a class="markdownIt-Anchor" href="#初等行变换计算与越界判断"></a> 初等行变换计算（与越界判断）</h2>
+<p>接着对构建完成的行列式进行处理并运算</p>
 <ul>
 <li>交换行</li>
 </ul>
-<pre><code class="C++">bool sign=false;//确定结果符号的变量
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">bool sign&#x3D;false;&#x2F;&#x2F;确定结果符号的变量
 void swapmar(int first,int second)&#123;
     swap(martix[first],martix[second]);
-    sign=!sign;
+    sign&#x3D;!sign;
     return;
-&#125;;
-</code></pre>
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ul>
-<li><p>提取单行公因式</p>
+<li>
+<p>提取单行公因式</p>
 <p>由于不支持分数计算，并没有写</p>
 </li>
-<li><p>某行减去另一行的倍数</p>
+<li>
+<p>某行减去另一行的倍数</p>
 </li>
 </ul>
-<pre><code class="C++">//获取消去所需倍数
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">&#x2F;&#x2F;获取消去所需倍数
 double getmul(int first,int second)&#123;
-    return martix[second][first]/martix[first][first];
+    return martix[second][first]&#x2F;martix[first][first];
 &#125;;
-//减去倍数
+&#x2F;&#x2F;减去倍数
 void mul(int first,int second,double mul)&#123;
-    for(int i=0;i&lt;martix[0].size();i++)&#123;
-        martix[second][i]-=martix[first][i]*mul;
+    for(int i&#x3D;0;i&lt;martix[0].size();i++)&#123;
+        martix[second][i]-&#x3D;martix[first][i]*mul;
     &#125;
-&#125;
-</code></pre>
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>接着开始处理与运算</p>
-<pre><code class="C++">for(int i=0;i&lt;martix.size();i++)&#123;
-    //寻找非零行并交换行
-    for(int j=i;j&lt;martix.size();j++)&#123;
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">for(int i&#x3D;0;i&lt;martix.size();i++)&#123;
+    &#x2F;&#x2F;寻找非零行并交换行
+    for(int j&#x3D;i;j&lt;martix.size();j++)&#123;
         if(martix[j][i])&#123;
             swapmar(j,i);
             break;
         &#125;
     &#125;
-    //判断是否无非零行
-    if(!martix[i][i])&#123;res=0;break;&#125;
-    //进行消去计算
-    for(int j=i+1;j&lt;martix.size();j++)&#123;
+    &#x2F;&#x2F;判断是否无非零行
+    if(!martix[i][i])&#123;res&#x3D;0;break;&#125;
+    &#x2F;&#x2F;进行消去计算
+    for(int j&#x3D;i+1;j&lt;martix.size();j++)&#123;
         if(!martix[j][i])continue;
         mul(i,j,getmul(i,j));
     &#125;
-    //边处理边计算，提高效率
-    res*=martix[i][i];
-&#125;
-</code></pre>
-<h2 id="结果输出"><a href="#结果输出" class="headerlink" title="结果输出"></a>结果输出</h2><p>代码并不多</p>
-<pre><code class="C++">if(sign)res=-res;//判断是否为负数
-cout&lt;&lt;endl&lt;&lt;res&lt;&lt;endl;//输出结果
-system(&quot;pause&quot;);
-</code></pre>
-<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>经过测试，能成功输出结果。</p>
+    &#x2F;&#x2F;边处理边计算，提高效率
+    res*&#x3D;martix[i][i];
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="结果输出"><a class="markdownIt-Anchor" href="#结果输出"></a> 结果输出</h2>
+<p>代码并不多</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">if(sign)res&#x3D;-res;&#x2F;&#x2F;判断是否为负数
+cout&lt;&lt;endl&lt;&lt;res&lt;&lt;endl;&#x2F;&#x2F;输出结果
+system(&quot;pause&quot;);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="后言"><a class="markdownIt-Anchor" href="#后言"></a> 后言</h2>
+<p>经过测试，能成功输出结果。</p>
 <p>观察代码不难发现，此程序仅支持有限小数与整数，不支持分数与无理数的精确计算。</p>
 <p>对于分数，出于时间考虑没有编写，读者可尝试多维护一个分母行列式，修改输入处理规定，运用最大公因数的知识来编写。而对于无理数，由于精度原因，只能做到近似。</p>
-<h2 id="代码总览"><a href="#代码总览" class="headerlink" title="代码总览"></a>代码总览</h2><pre><code class="C++">#include&lt;iostream&gt;
+<h2 id="代码总览"><a class="markdownIt-Anchor" href="#代码总览"></a> 代码总览</h2>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include&lt;iostream&gt;
 #include&lt;cstring&gt;
 #include&lt;vector&gt;
 
@@ -570,72 +578,71 @@ using namespace std;
 
 vector&lt;vector&lt;double&gt;&gt;martix;
 
-bool sign=false;
+bool sign&#x3D;false;
 
 double getmul(int first,int second)&#123;
-    return martix[second][first]/martix[first][first];
+    return martix[second][first]&#x2F;martix[first][first];
 &#125;;
 
 void swapmar(int first,int second)&#123;
     swap(martix[first],martix[second]);
-    sign=!sign;
+    sign&#x3D;!sign;
     return;
 &#125;;
 
 void mul(int first,int second,double mul)&#123;
-    for(int i=0;i&lt;martix[0].size();i++)&#123;
-        martix[second][i]-=martix[first][i]*mul;
+    for(int i&#x3D;0;i&lt;martix[0].size();i++)&#123;
+        martix[second][i]-&#x3D;martix[first][i]*mul;
     &#125;
 &#125;
 
 int main()&#123;
     string tmp;
     char ch;
-    double res=1.0;
+    double res&#x3D;1.0;
     vector&lt;double&gt;path;
 entry:
     while(cin.get(ch))&#123;
-        if(ch==&#39; &#39;)&#123;
+        if(ch&#x3D;&#x3D;&#39; &#39;)&#123;
             if(tmp.size())path.push_back(stod(tmp));
             tmp.clear();
-        &#125;else if(ch==&#39;\n&#39;)&#123;
+        &#125;else if(ch&#x3D;&#x3D;&#39;\n&#39;)&#123;
             if(tmp.size())path.push_back(stod(tmp));
             tmp.clear();
             if(path.size())martix.push_back(path);
             path.clear();
-        &#125;else if(ch==&#39;.&#39;||ch==&#39;+&#39;||ch==&#39;-&#39;)&#123;
-            tmp+=ch;
-        &#125;else if(ch&gt;=&#39;0&#39;&amp;&amp;ch&lt;=&#39;9&#39;)&#123;
-            tmp+=ch;
-        &#125;else if(ch==&#39;#&#39;)&#123;
+        &#125;else if(ch&#x3D;&#x3D;&#39;.&#39;||ch&#x3D;&#x3D;&#39;+&#39;||ch&#x3D;&#x3D;&#39;-&#39;)&#123;
+            tmp+&#x3D;ch;
+        &#125;else if(ch&gt;&#x3D;&#39;0&#39;&amp;&amp;ch&lt;&#x3D;&#39;9&#39;)&#123;
+            tmp+&#x3D;ch;
+        &#125;else if(ch&#x3D;&#x3D;&#39;#&#39;)&#123;
             break;
         &#125;
     &#125;
-    if(martix.size()!=martix[0].size())&#123;
+    if(martix.size()!&#x3D;martix[0].size())&#123;
         system(&quot;cls&quot;);
         cout&lt;&lt;&quot;error input,retyr plz!\n&quot;;
         goto entry;
     &#125;
-    for(int i=0;i&lt;martix.size();i++)&#123;
-        for(int j=i;j&lt;martix.size();j++)&#123;
+    for(int i&#x3D;0;i&lt;martix.size();i++)&#123;
+        for(int j&#x3D;i;j&lt;martix.size();j++)&#123;
             if(martix[j][i])&#123;
                 swapmar(j,i);
                 break;
             &#125;
         &#125;
-        if(!martix[i][i])&#123;res=0;break;&#125;
-        for(int j=i+1;j&lt;martix.size();j++)&#123;
+        if(!martix[i][i])&#123;res&#x3D;0;break;&#125;
+        for(int j&#x3D;i+1;j&lt;martix.size();j++)&#123;
             if(!martix[j][i])continue;
             mul(i,j,getmul(i,j));
         &#125;
-        res*=martix[i][i];
+        res*&#x3D;martix[i][i];
     &#125;
-    if(sign)res=-res;
+    if(sign)res&#x3D;-res;
     cout&lt;&lt;endl&lt;&lt;res&lt;&lt;endl;
     system(&quot;pause&quot;);
     return 0;
-&#125;
-</code></pre>
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
                 
             </div>

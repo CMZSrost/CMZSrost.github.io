@@ -29,7 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
 
 
 
@@ -443,7 +445,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    4.8k
+                    5k
                 </div>
                 
 
@@ -460,33 +462,39 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="内容分析"><a href="#内容分析" class="headerlink" title="内容分析"></a>内容分析</h2><hr>
+                <h2 id="内容分析"><a class="markdownIt-Anchor" href="#内容分析"></a> 内容分析</h2>
+<hr />
 <p>读题，了解需要函数来更正文本错误，未提供读取txt文件的函数</p>
 <p>读单词表格式，了解输入格式</p>
 <p>读纠错文本格式，了解输入格式</p>
 <p>读题目要求，了解输出格式、文本错误类型以及不会出现的数据类型</p>
 <p>综上，本函数需完成读取单词表及纠错文本，检查文本与单词编辑距离，更正后输出为改正文件的操作</p>
-<h2 id="设计方法"><a href="#设计方法" class="headerlink" title="设计方法"></a>设计方法</h2><hr>
-<h3 id="读取单词表"><a href="#读取单词表" class="headerlink" title="读取单词表"></a>读取单词表</h3><p>出于时间复杂度优化的角度，采用字符树的方式进行单词纠错，故此处用构建字符树的方法来读取单词表（具体实现在算法分析叙述，此处不再赘述，下同）。</p>
-<p>首先确定字符树结构：使用散列表映射对应字符，在将单词储存在字符树叶节点（相对）  </p>
-<pre><code class="C++">
-/*字符树
+<h2 id="设计方法"><a class="markdownIt-Anchor" href="#设计方法"></a> 设计方法</h2>
+<hr />
+<h3 id="读取单词表"><a class="markdownIt-Anchor" href="#读取单词表"></a> 读取单词表</h3>
+<p>出于时间复杂度优化的角度，采用字符树的方式进行单词纠错，故此处用构建字符树的方法来读取单词表（具体实现在算法分析叙述，此处不再赘述，下同）。</p>
+<p>首先确定字符树结构：使用散列表映射对应字符，在将单词储存在字符树叶节点（相对）</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*字符树
 alpha, 字符串
 alpha_tree, 下个节点
-*/
+*&#x2F;
 typedef struct alpha_tree
 &#123;
     char* alpha;
     struct alpha_tree *next[alphas];
 &#125;alphaT;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>同时构建（逆）哈希转换函数：0 ~ 25为小写字母a ~ z，26 ~ 51表示大写字母A ~ Z</p>
-<pre><code class="C++">
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
 char chart(int i)&#123;
     if(i&lt;26)return (char)(i+&#39;a&#39;);
     else return (char)(i-26+&#39;A&#39;);
@@ -494,29 +502,29 @@ char chart(int i)&#123;
 
 int rechart(char i)&#123;
     return
-    (int)i-&#39;a&#39;&gt;=0?
+    (int)i-&#39;a&#39;&gt;&#x3D;0?
     (int)(i - &#39;a&#39;) :
     (int)(i - &#39;A&#39; + 26);
 &#125;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>接着构建字符树，在构建前，使用函数初始化节点</p>
-<pre><code class="C++">
-/*新增树节点
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*新增树节点
 --  input:
     void
 --  output
     alphaT* 实例化节点
-*/
+*&#x2F;
 alphaT *init()
 &#123;
-    alphaT *target = (alphaT *)malloc(sizeof(alphaT));
-    target-&gt;alpha = NULL;
-    for (int i = 0; i &lt; alphas; i++)
-        target-&gt;next[i] = NULL;
+    alphaT *target &#x3D; (alphaT *)malloc(sizeof(alphaT));
+    target-&gt;alpha &#x3D; NULL;
+    for (int i &#x3D; 0; i &lt; alphas; i++)
+        target-&gt;next[i] &#x3D; NULL;
     return target;
 &#125;;
 
-/*构造树
+&#x2F;*构造树
 --  input
     int 当前遍历位置
     char* 字符串
@@ -524,35 +532,35 @@ alphaT *init()
     alphaT* 当前指向节点
 --  output
     void
-*/
+*&#x2F;
 void set_tree(int x, char *str, int slen, alphaT *cur)
 &#123;
-    if (x==slen)
+    if (x&#x3D;&#x3D;slen)
     &#123;
-        cur-&gt;alpha = str;
-        cur-&gt;alpha[slen]=&#39;\0&#39;;
+        cur-&gt;alpha &#x3D; str;
+        cur-&gt;alpha[slen]&#x3D;&#39;\0&#39;;
         return;
     &#125;
-    int store = rechart(str[x]);
-    if (NULL == cur-&gt;next[store])
+    int store &#x3D; rechart(str[x]);
+    if (NULL &#x3D;&#x3D; cur-&gt;next[store])
     &#123;
-        cur-&gt;next[store] = init();
+        cur-&gt;next[store] &#x3D; init();
     &#125;
     set_tree(x + 1, str, slen, cur-&gt;next[store]);
     return;
 &#125;;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>相对应的，设计字符树的析构函数</p>
-<pre><code class="C++">
-/*释放树空间
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*释放树空间
 --  input
     alphaT* 待释放节点
 --  output
     void
-*/
+*&#x2F;
 void free_tree(alphaT *target)
 &#123;
-    for (int i = 0; i &lt; alphas; i++)
+    for (int i &#x3D; 0; i &lt; alphas; i++)
     &#123;
         if (target-&gt;next[i])
             free_tree(target-&gt;next[i]);
@@ -562,15 +570,15 @@ void free_tree(alphaT *target)
     free(target);
     return;
 &#125;;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>完成以上准备，就可以设计字符树的构建函数，通过遍历读取单词表，每读一个单词构建一条树的枝干，将结束位置的节点的字符串赋值为该单词，以ascii作为哈希键值，搜索单词时经过的节点便可对应单词各个字符及其排列顺序</p>
-<pre><code class="C++">
-/*读取单词表
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*读取单词表
 --  input:
     FILE* 单词表文件
 --  output:
     bool 是否读取成功
-*/
+*&#x2F;
 bool read_voc(FILE *fin)
 &#123;
     reset();
@@ -578,79 +586,80 @@ bool read_voc(FILE *fin)
     while (fgets(str_tmp, MAX_LINE_LEN, fin))
     &#123;
         char*tmp;
-        int slen=strlen(str_tmp)-1;
-        if(slen&lt;=0)continue;
-        tmp=(char*)calloc(sizeof(char),slen+1);
+        int slen&#x3D;strlen(str_tmp)-1;
+        if(slen&lt;&#x3D;0)continue;
+        tmp&#x3D;(char*)calloc(sizeof(char),slen+1);
         strncpy(tmp,str_tmp,slen);
         set_tree(0, tmp, slen, root);
     &#125; 
     return true;
 &#125;;
-</code></pre>
-<hr>
-<h3 id="待纠错文本的预处理"><a href="#待纠错文本的预处理" class="headerlink" title="待纠错文本的预处理"></a>待纠错文本的预处理</h3><p>待纠错文本具有固定格式，同时在设计时需考虑错误格式等问题，同时考虑到待纠错单词中无数字，故单词部分仅考虑是否为字母即可。</p>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<hr />
+<h3 id="待纠错文本的预处理"><a class="markdownIt-Anchor" href="#待纠错文本的预处理"></a> 待纠错文本的预处理</h3>
+<p>待纠错文本具有固定格式，同时在设计时需考虑错误格式等问题，同时考虑到待纠错单词中无数字，故单词部分仅考虑是否为字母即可。</p>
 <p>对于待纠错文本的处理，首先出于输出格式考虑，需要切分单行，接着需要切单行中每个单词，再进行单词比较（此处在下一步详述），最后按格式输出。</p>
 <p>首先将对待纠错文本的处理封装至单个函数中，在函数中切分每一行单词</p>
-<pre><code class="C++">
-/*处理文件
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*处理文件
 --  input:
     void
 --  output:
     void
-*/
+*&#x2F;
 void deal()
 &#123;
     char line[MAX_LINE_LEN];
     fgets(line, 4, words);
     while (!feof(words))
     &#123;
-        //读取并输出行数
+        &#x2F;&#x2F;读取并输出行数
         fgets(line, 6, words);
         if (feof(words))
             return;
         fputs(line, correct);
         printf(&quot;%s &quot;, line);
-        //
+        &#x2F;&#x2F;
         fgets(line, MAX_LINE_LEN, words);
-        if (line[strlen(line) - 1] == &#39;\n&#39;)
-            line[strlen(line) - 1] = &#39; &#39;;
+        if (line[strlen(line) - 1] &#x3D;&#x3D; &#39;\n&#39;)
+            line[strlen(line) - 1] &#x3D; &#39; &#39;;
         cmpword(line, strlen(line));
         printf(&quot;\n&quot;);
     &#125;
 &#125;;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>接着对每一行单词进行切分</p>
 <p>行切分函数中具体读取某一行单词，同时为了方便按格式输出，在此处采用边处理边输出的方式。</p>
-<pre><code class="C++">
-/*行单词纠错
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*行单词纠错
 --  input:
     char* 待纠错行
     int 待纠错行长度
 --  output:
     void
-*/
+*&#x2F;
 void cmpword(char *line, int len)
 &#123;
     char str_tmp[MAX_LINE_LEN];
-    int str_len = 0;
-    int cur = 0;
+    int str_len &#x3D; 0;
+    int cur &#x3D; 0;
 
     while (!isalpha(line[cur]))
         cur++;
     while (isalpha(line[cur]))
     &#123;
-        str_tmp[str_len] = line[cur];
+        str_tmp[str_len] &#x3D; line[cur];
         str_len++;
         cur++;
     &#125;
-    str_tmp[str_len] = &#39;\0&#39;;
+    str_tmp[str_len] &#x3D; &#39;\0&#39;;
 
     putstr(str_tmp, str_len);
-    str_len = 0;
+    str_len &#x3D; 0;
 
-    // printf(&quot;%s &quot;,tmp);
+    &#x2F;&#x2F; printf(&quot;%s &quot;,tmp);
     fputc(&#39; &#39;, correct);
-    while (cur &lt; len &amp;&amp; line[cur] == &#39; &#39;)
+    while (cur &lt; len &amp;&amp; line[cur] &#x3D;&#x3D; &#39; &#39;)
     &#123;
         cur++;
     &#125;
@@ -659,61 +668,62 @@ void cmpword(char *line, int len)
     &#123;
         if (isalpha(line[cur]))
         &#123;
-            str_tmp[str_len++] = line[cur++];
+            str_tmp[str_len++] &#x3D; line[cur++];
         &#125;
         else if (!isalpha(line[cur]))
         &#123;
 
             putstr(str_tmp, str_len);
-            str_len = 0;
+            str_len &#x3D; 0;
 
-            // printf(&quot;%s &quot;,tmp);
+            &#x2F;&#x2F; printf(&quot;%s &quot;,tmp);
             cur++;
             while (cur &lt; len &amp;&amp; !isalpha(line[cur]))
             &#123;
                 cur++;
             &#125;
-            if (cur != len)
-                fputc(&#39;/&#39;, correct);
+            if (cur !&#x3D; len)
+                fputc(&#39;&#x2F;&#39;, correct);
             else
                 fputc(&#39;\n&#39;, correct);
         &#125;
     &#125;
     return;
 &#125;;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>考虑到字符树的内存管理问题以及进行判断时的’\0’问题，用tmp字符串添加末尾’\0’来临时实现单个单词的比较与输出，用putstr函数完成这个功能</p>
-<pre><code class="C++">
-/*输出字符串
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*输出字符串
 --  input:
     char* 待输出字符串
     int 字符串长度
 -- output:
     void
-*/
+*&#x2F;
 void putstr(char *str_tmp, int str_len)
 &#123;
     char *tmp;
-    tmp = (char *)calloc(sizeof(char), str_len + 1);
+    tmp &#x3D; (char *)calloc(sizeof(char), str_len + 1);
     strncpy(tmp, str_tmp, str_len);
-    tmp[str_len] = &#39;\0&#39;;
+    tmp[str_len] &#x3D; &#39;\0&#39;;
     find(tmp, str_len, 0, root);
     free(tmp);
-    tmp = (char *)calloc(sizeof(char), strlen(res.alpha) + 1);
+    tmp &#x3D; (char *)calloc(sizeof(char), strlen(res.alpha) + 1);
     strncpy(tmp, res.alpha, strlen(res.alpha));
-    tmp[strlen(res.alpha)] = &#39;\0&#39;;
+    tmp[strlen(res.alpha)] &#x3D; &#39;\0&#39;;
     reset();
     fputs(tmp, correct);
     free(tmp);
     return;
 &#125;;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>在单词比较时，涉及到find(),reset()函数将在下一步叙述</p>
-<hr>
-<h3 id="单词比较"><a href="#单词比较" class="headerlink" title="单词比较"></a>单词比较</h3><p>单词比较是这个程序的核心算法，对其的优化程度决定了整个程序的运行效率，为了优化，将设计两个函数find()（剪枝操作）、edit_dis()（比较编辑距离）（具体实现在算法分析叙述，此处不赘述）</p>
+<hr />
+<h3 id="单词比较"><a class="markdownIt-Anchor" href="#单词比较"></a> 单词比较</h3>
+<p>单词比较是这个程序的核心算法，对其的优化程度决定了整个程序的运行效率，为了优化，将设计两个函数find()（剪枝操作）、edit_dis()（比较编辑距离）（具体实现在算法分析叙述，此处不赘述）</p>
 <p>首先设计find()函数在字符树中寻找最有可能的单词，并且在每次搜索操作中更新边界，缩小范围以优化时间复杂度</p>
-<pre><code class="C++">
-/*搜索可能单词
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*搜索可能单词
 --  output:
     char* 待检查单词
     int 单词长度
@@ -721,30 +731,30 @@ void putstr(char *str_tmp, int str_len)
     alphaT* 当前所在节点
 --  output:
     void
-*/
+*&#x2F;
 void find(char *word, int len, int x, alphaT *cur)
 &#123;
-    int now = fabs(len - x - 1);
-    if (x == len &amp;&amp; cur-&gt;alpha &amp;&amp; !strcmp(cur-&gt;alpha, word))
+    int now &#x3D; fabs(len - x - 1);
+    if (x &#x3D;&#x3D; len &amp;&amp; cur-&gt;alpha &amp;&amp; !strcmp(cur-&gt;alpha, word))
     &#123;
-        res.alpha = cur-&gt;alpha;
-        res.edit_dis = 0;
+        res.alpha &#x3D; cur-&gt;alpha;
+        res.edit_dis &#x3D; 0;
         return;
     &#125;
-    else if (x &gt;= len)
+    else if (x &gt;&#x3D; len)
     &#123;
-        if (now &gt;= res.edit_dis)
+        if (now &gt;&#x3D; res.edit_dis)
             return;
         else
         &#123;
             if (cur-&gt;alpha)
                 editDis(word, cur-&gt;alpha);
-            for (int i = 0; i &lt; alphas; i++)
+            for (int i &#x3D; 0; i &lt; alphas; i++)
             &#123;
                 if (cur-&gt;next[i])
                 &#123;
                     find(word, len, x + 1, cur-&gt;next[i]);
-                    if (now &gt;= res.edit_dis)
+                    if (now &gt;&#x3D; res.edit_dis)
                         return;
                 &#125;
             &#125;
@@ -752,8 +762,8 @@ void find(char *word, int len, int x, alphaT *cur)
     &#125;
     else
     &#123;
-        int ptr = rechart(word[x]) % alphas;
-        for (int i = 0; i &lt; alphas; i++, ptr = (ptr + 1) % alphas)
+        int ptr &#x3D; rechart(word[x]) % alphas;
+        for (int i &#x3D; 0; i &lt; alphas; i++, ptr &#x3D; (ptr + 1) % alphas)
         &#123;
             if (cur-&gt;next[ptr])
             &#123;
@@ -762,70 +772,70 @@ void find(char *word, int len, int x, alphaT *cur)
                     return;
             &#125;
         &#125;
-        if (now &gt;= res.edit_dis)
+        if (now &gt;&#x3D; res.edit_dis)
             return;
         if (cur-&gt;alpha)
             editDis(word, cur-&gt;alpha);
         return;
     &#125;
 &#125;;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>在搜寻过程中，需要维护当前编辑距离最小的字符串，故定义结构体curpack以存储信息，并定义初始化函数</p>
-<pre><code class="C++">
-/*当前匹配字符
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*当前匹配字符
 edit_dis, 编辑距离
 alpha, 已更正文本
-*/
+*&#x2F;
 typedef struct flags
 &#123;
     int edit_dis;
     char* alpha;
 &#125; curpack;
 
-/*重置更正字符
+&#x2F;*重置更正字符
 --  input:
     void
 --  output:
     void
-*/
+*&#x2F;
 void reset()&#123;
-    res.alpha=NULL;
-    res.edit_dis=MAX_LINE_LEN;
+    res.alpha&#x3D;NULL;
+    res.edit_dis&#x3D;MAX_LINE_LEN;
 &#125;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>完成上述两步后，把待纠错单词与符合搜索范围的单词进行比较，由于比较中需要确定较小值，故设计min()，函数不赘述</p>
-<pre><code class="C++">
-/*计算编辑距离
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*计算编辑距离
 --  input:
     char* 检查单词
     char* 字典单词
 --  output:
     void
-*/
+*&#x2F;
 void editDis(char *word, char *voc)
 &#123;
-    int wlen = strlen(word) + 1, vlen = strlen(voc) + 1;
+    int wlen &#x3D; strlen(word) + 1, vlen &#x3D; strlen(voc) + 1;
     int **dp;
-    dp = (int **)calloc(sizeof(int *), wlen);
-    for (int i = 0; i &lt; wlen; i++)
+    dp &#x3D; (int **)calloc(sizeof(int *), wlen);
+    for (int i &#x3D; 0; i &lt; wlen; i++)
     &#123;
-        dp[i] = (int *)calloc(sizeof(int), vlen);
-        dp[i][0] = i;
+        dp[i] &#x3D; (int *)calloc(sizeof(int), vlen);
+        dp[i][0] &#x3D; i;
     &#125;
-    for (int i = 0; i &lt; vlen; i++)
-        dp[0][i] = i;
+    for (int i &#x3D; 0; i &lt; vlen; i++)
+        dp[0][i] &#x3D; i;
 
-    for (int i = 1; i &lt; wlen; i++)
+    for (int i &#x3D; 1; i &lt; wlen; i++)
     &#123;
-        for (int j = 1; j &lt; vlen; j++)
+        for (int j &#x3D; 1; j &lt; vlen; j++)
         &#123;
-            if (word[i] == voc[j])
-                dp[i][j] = min(
+            if (word[i] &#x3D;&#x3D; voc[j])
+                dp[i][j] &#x3D; min(
                     min(dp[i - 1][j] + 1,
                         dp[i][j - 1] + 1),
                     dp[i - 1][j - 1]);
             else
-                dp[i][j] = 1 + min(
+                dp[i][j] &#x3D; 1 + min(
                                    min(dp[i - 1][j],
                                        dp[i][j - 1]),
                                    dp[i - 1][j - 1]);
@@ -833,38 +843,43 @@ void editDis(char *word, char *voc)
     &#125;
     if (dp[wlen - 1][vlen - 1] &lt; res.edit_dis)
     &#123;
-        res.alpha = voc;
-        res.edit_dis = dp[wlen - 1][vlen - 1];
+        res.alpha &#x3D; voc;
+        res.edit_dis &#x3D; dp[wlen - 1][vlen - 1];
     &#125;
-    for (int i = 0; i &lt; wlen; i++)
+    for (int i &#x3D; 0; i &lt; wlen; i++)
     &#123;
-        if (dp[i] != NULL)
+        if (dp[i] !&#x3D; NULL)
             free(dp[i]);
     &#125;
     free(dp);
     return;
 &#125;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>至此，函数的总体设计已经叙述完成，细节处如释放内存等操作此处不赘述</p>
-<h2 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h2><hr>
-<h3 id="计算枚举法可行性"><a href="#计算枚举法可行性" class="headerlink" title="计算枚举法可行性"></a>计算枚举法可行性</h3><p>对于文档提供的编辑距离，采用了动态规划的思想，单纯来比较某一单词</p>
+<h2 id="算法分析"><a class="markdownIt-Anchor" href="#算法分析"></a> 算法分析</h2>
+<hr />
+<h3 id="计算枚举法可行性"><a class="markdownIt-Anchor" href="#计算枚举法可行性"></a> 计算枚举法可行性</h3>
+<p>对于文档提供的编辑距离，采用了动态规划的思想，单纯来比较某一单词</p>
 <p>(设单个单词长度为M，用来比较的单词长度为N)</p>
 <p>时间复杂度为：O(MN)，空间复杂度为O(MN)</p>
 <p>同时考虑到每个单词都进行对整个单词表的遍历，可知</p>
 <p>(设待纠错单词数为A，单词表单词数为B)</p>
 <p>时间复杂度为O(ABMN),空间复杂度为O(MN+AB)</p>
 <p>显然靠枚举法进行比较，程序的时间开销极大，不予考虑</p>
-<hr>
-<h3 id="算法改良-剪枝"><a href="#算法改良-剪枝" class="headerlink" title="算法改良-剪枝"></a>算法改良-剪枝</h3><p>注意到时间复杂度主要是由于可比较单词过多导致的，故考虑用剪枝的方法来缩小搜索范围，提高效率</p>
+<hr />
+<h3 id="算法改良-剪枝"><a class="markdownIt-Anchor" href="#算法改良-剪枝"></a> 算法改良-剪枝</h3>
+<p>注意到时间复杂度主要是由于可比较单词过多导致的，故考虑用剪枝的方法来缩小搜索范围，提高效率</p>
 <p>关注程序目的可知，只需构建有利于字符匹配的结构体，通过哈希映射的方式，便可将最优时间复杂度降到O(N)，所需付出的空间复杂度代价仅为O(BN)。</p>
-<p>故使用字符树结构，以ascii码作为键值偏移量，构建了字符的哈希表<br>由于字符树到达叶节点的路径是字符串的映射，故可仅在结点处赋值有效字符串（有效指单词表中存在该单词）来表示该处为一“叶”节点（代表字符串路径的结束）</p>
+<p>故使用字符树结构，以ascii码作为键值偏移量，构建了字符的哈希表<br />
+由于字符树到达叶节点的路径是字符串的映射，故可仅在结点处赋值有效字符串（有效指单词表中存在该单词）来表示该处为一“叶”节点（代表字符串路径的结束）</p>
 <p>完成结构上的剪枝后，接下来是搜索范围的剪枝</p>
 <p>对于非最优情况，可以以最优情况为起点考虑问题。观察可知编辑距离总大于等于两字符串的长度之差，由此可以使搜索优先从同等长度开始，向更长的字符串遍历；与此同时，利用动态规划的思维，每进行一次搜索决策时，参考当前最优编辑距离，缩小搜索范围。</p>
 <p>剪枝环节用递归函数find来实现</p>
-<hr>
-<h3 id="剪枝实现－find"><a href="#剪枝实现－find" class="headerlink" title="剪枝实现－find()"></a>剪枝实现－find()</h3><p>首先，设置游标x与cur表示当前函数检查的字符位置，len表示检查的单词的长度，word传递待检查字符串</p>
-<pre><code class="C++">
-/*搜索可能单词
+<hr />
+<h3 id="剪枝实现-find"><a class="markdownIt-Anchor" href="#剪枝实现-find"></a> 剪枝实现－find()</h3>
+<p>首先，设置游标x与cur表示当前函数检查的字符位置，len表示检查的单词的长度，word传递待检查字符串</p>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;*搜索可能单词
 --  output:
     char* 待检查单词
     int 单词长度
@@ -872,30 +887,30 @@ void editDis(char *word, char *voc)
     alphaT* 当前所在节点
 --  output:
     void
-*/
+*&#x2F;
 void find(char *word, int len, int x, alphaT *cur)
 &#123;
-    int now = fabs(len - x - 1);
-    if (x == len &amp;&amp; cur-&gt;alpha &amp;&amp; !strcmp(cur-&gt;alpha, word))
+    int now &#x3D; fabs(len - x - 1);
+    if (x &#x3D;&#x3D; len &amp;&amp; cur-&gt;alpha &amp;&amp; !strcmp(cur-&gt;alpha, word))
     &#123;
-        res.alpha = cur-&gt;alpha;
-        res.edit_dis = 0;
+        res.alpha &#x3D; cur-&gt;alpha;
+        res.edit_dis &#x3D; 0;
         return;
     &#125;
-    else if (x &gt;= len)
+    else if (x &gt;&#x3D; len)
     &#123;
-        if (now &gt;= res.edit_dis)
+        if (now &gt;&#x3D; res.edit_dis)
             return;
         else
         &#123;
             if (cur-&gt;alpha)
                 editDis(word, cur-&gt;alpha);
-            for (int i = 0; i &lt; alphas; i++)
+            for (int i &#x3D; 0; i &lt; alphas; i++)
             &#123;
                 if (cur-&gt;next[i])
                 &#123;
                     find(word, len, x + 1, cur-&gt;next[i]);
-                    if (now &gt;= res.edit_dis)
+                    if (now &gt;&#x3D; res.edit_dis)
                         return;
                 &#125;
             &#125;
@@ -903,8 +918,8 @@ void find(char *word, int len, int x, alphaT *cur)
     &#125;
     else
     &#123;
-        int ptr = rechart(word[x]) % alphas;
-        for (int i = 0; i &lt; alphas; i++, ptr = (ptr + 1) % alphas)
+        int ptr &#x3D; rechart(word[x]) % alphas;
+        for (int i &#x3D; 0; i &lt; alphas; i++, ptr &#x3D; (ptr + 1) % alphas)
         &#123;
             if (cur-&gt;next[ptr])
             &#123;
@@ -913,14 +928,14 @@ void find(char *word, int len, int x, alphaT *cur)
                     return;
             &#125;
         &#125;
-        if (now &gt;= res.edit_dis)
+        if (now &gt;&#x3D; res.edit_dis)
             return;
         if (cur-&gt;alpha)
             editDis(word, cur-&gt;alpha);
         return;
     &#125;
 &#125;;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>由于字符树”叶”结点并不代表枝干的结束，因此此处x与len共有三种不同意义的大小关系x==len,x&gt;=len与x &lt; len</p>
 <p>首先讨论x==len，此时字符路径与word长度相等，若该结点为”叶”结点，表示该word有对应的单词，故可赋值到当前curpack并返回；若该结点不是”叶”结点，说明无对应单词，此处便需开始搜索。</p>
 <p>当x&gt;=len时，必定处于搜索状态，此时考虑剪枝。</p>
@@ -928,8 +943,9 @@ void find(char *word, int len, int x, alphaT *cur)
 <p>当x &lt; len时，有可能处于搜索状态，故在循环体中加入判断，同时为了防止判断错误，需先将最优编辑距离初始化为极大值，防止还未搜索便退出，同时此处的判断也可作为函数返回结果的通道</p>
 <p>同时，当循环体结束时，判断当前now是否大于最优编辑距离以剪枝（同时也是返回结果的通道）；若否，且该结点为”叶”结点，则进行单词比较，更新最优编辑距离</p>
 <p>剪枝总体结构叙述结束，同时注意到一些细节：在x &lt; len的循环体中，now与最优编辑距离使用&gt;判断，而在其他位置则用&gt;=判断，这是由于此处为从父向子结点遍历，若用&gt;=，会剔除父结点，导致剪去该父结点下的可能存在的更优编辑距离，其他位置则无此问题。</p>
-<hr>
-<h3 id="编辑距离算法"><a href="#编辑距离算法" class="headerlink" title="编辑距离算法"></a>编辑距离算法</h3><p>最后是主要算法edit_dis()。运用动态规划方法得到编辑距离。</p>
+<hr />
+<h3 id="编辑距离算法"><a class="markdownIt-Anchor" href="#编辑距离算法"></a> 编辑距离算法</h3>
+<p>最后是主要算法edit_dis()。运用动态规划方法得到编辑距离。</p>
 <blockquote>
 <p>动态规划: 求解 以时间划分阶段的动态过程最优化方案 的过程，是一种 通过储存前阶段的结果来辅助现阶段决策 的算法</p>
 </blockquote>
@@ -939,23 +955,34 @@ void find(char *word, int len, int x, alphaT *cur)
 <p>以下是pdf中对于(Levenshtein)莱文斯坦距离的解释</p>
 <blockquote>
 <p>首先，假设对于字符串A和B，我们使用一个二维数组distance[1 + length of A][1+length of B]，</p>
-<p>其中distance[i][j]的值表示将 A的1到i部分 转换为 B的1到j部分 需要的最少编辑次数。所以，在i等于0时，也就是说对于distance[0,j]，A的空子串部分到B的前j个元素组成的子串的转换，需要j次操作。同理可得distance数组的首行和首列为0到i和0到j。  </p>
-<p>对于剩余的distance[i][j]（也就是A1<del>i元素的子串和B1</del>j元素的子串的距离），可以由distance[i-1][j]，distance[i][j-1]，distance[i-1][j-1]来确定，</p>
+<p>其中distance[i][j]的值表示将 A的1到i部分 转换为 B的1到j部分 需要的最少编辑次数。所以，在i等于0时，也就是说对于distance[0,j]，A的空子串部分到B的前j个元素组成的子串的转换，需要j次操作。同理可得distance数组的首行和首列为0到i和0到j。</p>
+<p>对于剩余的distance[i][j]（也就是A1<sub>i元素的子串和B1</sub>j元素的子串的距离），可以由distance[i-1][j]，distance[i][j-1]，distance[i-1][j-1]来确定，</p>
 <p>如果计算A[i]和B[j]相同，取min（distance[i-1][j]+1， distance[i][j-1]+1，distance[i-1][j-1]）即可。</p>
-<p>同理，如果计算A[i]和B[j]不同，就要取min（distance[i-1][j]+1，distance[i][j-1]+1，distance[i-1][j-1]+1）。  </p>
+<p>同理，如果计算A[i]和B[j]不同，就要取min（distance[i-1][j]+1，distance[i][j-1]+1，distance[i-1][j-1]+1）。</p>
 <p>计算出所有distance元素后，我们要求的A到B的编辑距离就是distance[1+length of A][1+length of B]</p>
-<p>表格如下<br>$$<br>\begin{matrix}<br>· &amp; · &amp; u &amp; c &amp; k \\<br>· &amp; 0 &amp; 1 &amp; 2 &amp; 3 \\<br>l &amp; 1 &amp; 1 &amp; 2 &amp; 3 \\<br>u &amp; 2 &amp; 1 &amp; 2 &amp; 3 \\<br>c &amp; 3 &amp; 2 &amp; 1 &amp; 2 \\<br>k &amp; 4 &amp; 3 &amp; 2 &amp; 1<br>\end{matrix}<br>$$</p>
+<p>表格如下</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mo separator="true">⋅</mo></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mo separator="true">⋅</mo></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>u</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>c</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>k</mi></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mo separator="true">⋅</mo></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>l</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>u</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>c</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mi>k</mi></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>4</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>3</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{matrix}
+· &amp; · &amp; u &amp; c &amp; k \\\\
+· &amp; 0 &amp; 1 &amp; 2 &amp; 3 \\\\
+l &amp; 1 &amp; 1 &amp; 2 &amp; 3 \\\\
+u &amp; 2 &amp; 1 &amp; 2 &amp; 3 \\\\
+c &amp; 3 &amp; 2 &amp; 1 &amp; 2 \\\\
+k &amp; 4 &amp; 3 &amp; 2 &amp; 1 
+\end{matrix}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:13.2em;vertical-align:-6.35em;"></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:6.849999999999999em;"><span style="top:-9.009999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mpunct">⋅</span></span></span><span style="top:-7.809999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-6.6099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mpunct">⋅</span></span></span><span style="top:-5.409999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-4.209999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.01968em;">l</span></span></span><span style="top:-3.0099999999999976em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:-1.8099999999999976em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">u</span></span></span><span style="top:-0.6099999999999983em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:0.590000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">c</span></span></span><span style="top:1.7900000000000003em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span><span style="top:2.9899999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:6.35em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:6.849999999999999em;"><span style="top:-9.009999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mpunct">⋅</span></span></span><span style="top:-6.6099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-4.209999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-1.8099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:0.5900000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:2.989999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">4</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:6.349999999999999em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:6.849999999999999em;"><span style="top:-9.009999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">u</span></span></span><span style="top:-6.6099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-4.209999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:-1.8099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:0.5900000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:2.989999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:6.349999999999999em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:6.849999999999999em;"><span style="top:-9.009999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">c</span></span></span><span style="top:-6.6099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-4.209999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-1.8099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:0.5900000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span><span style="top:2.989999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:6.349999999999999em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:6.849999999999999em;"><span style="top:-9.009999999999998em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span><span style="top:-6.6099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:-4.209999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:-1.8099999999999985em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:0.5900000000000001em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:2.989999999999999em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:6.349999999999999em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
 </blockquote>
-<hr>
-<h3 id="算法复杂度计算"><a href="#算法复杂度计算" class="headerlink" title="算法复杂度计算"></a>算法复杂度计算</h3><p>综上，算法的复杂度如下</p>
+<hr />
+<h3 id="算法复杂度计算"><a class="markdownIt-Anchor" href="#算法复杂度计算"></a> 算法复杂度计算</h3>
+<p>综上，算法的复杂度如下</p>
 <p>设待纠错单词平均长度为A，数量为N；单词表单词平均长度为B，数量为M</p>
 <p>假设有T个平均长度为H的错误文本</p>
 <p>时间复杂度：O(2BM+(N-T)A+TBH(logMlogH))=O(x^3 log^2 x)</p>
 <p>最优：Ω(2BM+(N-T)A+TBH)=Ω(x^3)</p>
 <p>空间复杂度：O(BM+HBlogM)=O(x^2 logx)</p>
-<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><hr>
-<pre><code class="C++">
-//hexo会把&lt;&gt;识别成标签，故此处多加\
+<h2 id="附录"><a class="markdownIt-Anchor" href="#附录"></a> 附录</h2>
+<hr />
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
+&#x2F;&#x2F;hexo会把&lt;&gt;识别成标签，故此处多加\
 
 #ifndef ALPHATREE_H
 #define ALPHATREE_H
@@ -964,10 +991,10 @@ void find(char *word, int len, int x, alphaT *cur)
 #include &lt;\string.h&gt;
 #include &lt;\math.h&gt;
 
-extern const int MAX_VOC;//最大单词长度
-extern const int MAX_LINE_LEN;//最大单行长度
+extern const int MAX_VOC;&#x2F;&#x2F;最大单词长度
+extern const int MAX_LINE_LEN;&#x2F;&#x2F;最大单行长度
 
-#define alphas 52//字符树哈希表大小
+#define alphas 52&#x2F;&#x2F;字符树哈希表大小
 
 typedef struct alpha_tree
 &#123;
@@ -999,20 +1026,21 @@ int rechart(char);
 void reset();
 
 #endif
-</code></pre>
-<h2 id="源代码查看"><a href="#源代码查看" class="headerlink" title="源代码查看"></a>源代码查看</h2><hr>
-<pre><code class="C++">
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="源代码查看"><a class="markdownIt-Anchor" href="#源代码查看"></a> 源代码查看</h2>
+<hr />
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">
 #include &lt;\stdlib.h&gt;
 #include &lt;\ctype.h&gt;
 #include &quot;alphatree.h&quot;
 
 #define min(a,b) a &lt; b ? a : b
 
-const char *vac_address = &quot;vocabulary.txt&quot;;
-const char *word_address = &quot;words.txt&quot;;
-const char *correct_address = &quot;words_correct.txt&quot;;
-const int MAX_VOC = 4000;
-const int MAX_LINE_LEN = 500;
+const char *vac_address &#x3D; &quot;vocabulary.txt&quot;;
+const char *word_address &#x3D; &quot;words.txt&quot;;
+const char *correct_address &#x3D; &quot;words_correct.txt&quot;;
+const int MAX_VOC &#x3D; 4000;
+const int MAX_LINE_LEN &#x3D; 500;
 
 extern curpack res;
 extern alphaT *root;
@@ -1020,40 +1048,40 @@ FILE *vocabulary;
 FILE *words;
 FILE *correct;
 
-/*
+&#x2F;*
 author: 郭伟铭
 Date: 2021.11.7
 Encoding-type: GBK
 version: 1.0
-*/
+*&#x2F;
 
-/*处理文件
+&#x2F;*处理文件
 --  input:
     void
 --  output:
     void
-*/
+*&#x2F;
 void deal();
 
-/*行单词纠错
+&#x2F;*行单词纠错
 --  input:
     char* 待纠错行
     int 待纠错行长度
 --  output:
     void
-*/
+*&#x2F;
 void cmpword(char *, int);
 
-/*计算编辑距离
+&#x2F;*计算编辑距离
 --  input:
     char* 检查单词
     char* 字典单词
 --  output:
     void
-*/
+*&#x2F;
 void editDis(char *, char *);
 
-/*搜索可能单词
+&#x2F;*搜索可能单词
 --  output:
     char* 待检查单词
     int 单词长度
@@ -1061,53 +1089,53 @@ void editDis(char *, char *);
     alphaT* 当前所在节点
 --  output:
     void
-*/
+*&#x2F;
 void find(char *, int, int, alphaT *);
 
-/*输出字符串
+&#x2F;*输出字符串
 --  input:
     char* 待输出字符串
     int 字符串长度
 -- output:
     void
-*/
+*&#x2F;
 void putstr(char *, int);
 
 int main()
 &#123;
     printf(&quot;Number:210810429\n&quot;);
     printf(&quot;subject: correct-word - program No.1\n\n&quot;);
-    //初始化
-    root = init();
-    //读取vocabulary
-    vocabulary = fopen(vac_address, &quot;r&quot;);
-    if (vocabulary == NULL)
+    &#x2F;&#x2F;初始化
+    root &#x3D; init();
+    &#x2F;&#x2F;读取vocabulary
+    vocabulary &#x3D; fopen(vac_address, &quot;r&quot;);
+    if (vocabulary &#x3D;&#x3D; NULL)
     &#123;
         printf(&quot;open vocabulary fail!\n&quot;);
         return 0;
     &#125;
     if (vocabulary)
     &#123;
-        if (read_voc(vocabulary) == false)
+        if (read_voc(vocabulary) &#x3D;&#x3D; false)
             return 0;
         fclose(vocabulary);
     &#125;
-    //文件同步读写
-    words = fopen(word_address, &quot;r&quot;);
-    if (words == NULL)
+    &#x2F;&#x2F;文件同步读写
+    words &#x3D; fopen(word_address, &quot;r&quot;);
+    if (words &#x3D;&#x3D; NULL)
     &#123;
         printf(&quot;open word fail!\n&quot;);
         return 0;
     &#125;
-    correct = fopen(correct_address, &quot;w&quot;);
-    if (correct == NULL)
+    correct &#x3D; fopen(correct_address, &quot;w&quot;);
+    if (correct &#x3D;&#x3D; NULL)
     &#123;
         printf(&quot;create correct fail!\n&quot;);
         return 0;
     &#125;
     deal();
 
-    //后处理
+    &#x2F;&#x2F;后处理
     if (words)
         fclose(words);
     if (correct)
@@ -1123,16 +1151,16 @@ void deal()
     fgets(line, 4, words);
     while (!feof(words))
     &#123;
-        //读取并输出行数
+        &#x2F;&#x2F;读取并输出行数
         fgets(line, 6, words);
         if (feof(words))
             return;
         fputs(line, correct);
         printf(&quot;%s &quot;, line);
-        //
+        &#x2F;&#x2F;
         fgets(line, MAX_LINE_LEN, words);
-        if (line[strlen(line) - 1] == &#39;\n&#39;)
-            line[strlen(line) - 1] = &#39; &#39;;
+        if (line[strlen(line) - 1] &#x3D;&#x3D; &#39;\n&#39;)
+            line[strlen(line) - 1] &#x3D; &#39; &#39;;
         cmpword(line, strlen(line));
         printf(&quot;\n&quot;);
     &#125;
@@ -1141,14 +1169,14 @@ void deal()
 void putstr(char *str_tmp, int str_len)
 &#123;
     char *tmp;
-    tmp = (char *)calloc(sizeof(char), str_len + 1);
+    tmp &#x3D; (char *)calloc(sizeof(char), str_len + 1);
     strncpy(tmp, str_tmp, str_len);
-    tmp[str_len] = &#39;\0&#39;;
+    tmp[str_len] &#x3D; &#39;\0&#39;;
     find(tmp, str_len, 0, root);
     free(tmp);
-    tmp = (char *)calloc(sizeof(char), strlen(res.alpha) + 1);
+    tmp &#x3D; (char *)calloc(sizeof(char), strlen(res.alpha) + 1);
     strncpy(tmp, res.alpha, strlen(res.alpha));
-    tmp[strlen(res.alpha)] = &#39;\0&#39;;
+    tmp[strlen(res.alpha)] &#x3D; &#39;\0&#39;;
     reset();
     fputs(tmp, correct);
     free(tmp);
@@ -1158,25 +1186,25 @@ void putstr(char *str_tmp, int str_len)
 void cmpword(char *line, int len)
 &#123;
     char str_tmp[MAX_LINE_LEN];
-    int str_len = 0;
-    int cur = 0;
+    int str_len &#x3D; 0;
+    int cur &#x3D; 0;
 
     while (!isalpha(line[cur]))
         cur++;
     while (isalpha(line[cur]))
     &#123;
-        str_tmp[str_len] = line[cur];
+        str_tmp[str_len] &#x3D; line[cur];
         str_len++;
         cur++;
     &#125;
-    str_tmp[str_len] = &#39;\0&#39;;
+    str_tmp[str_len] &#x3D; &#39;\0&#39;;
 
     putstr(str_tmp, str_len);
-    str_len = 0;
+    str_len &#x3D; 0;
 
-    // printf(&quot;%s &quot;,tmp);
+    &#x2F;&#x2F; printf(&quot;%s &quot;,tmp);
     fputc(&#39; &#39;, correct);
-    while (cur &lt; len &amp;&amp; line[cur] == &#39; &#39;)
+    while (cur &lt; len &amp;&amp; line[cur] &#x3D;&#x3D; &#39; &#39;)
     &#123;
         cur++;
     &#125;
@@ -1185,22 +1213,22 @@ void cmpword(char *line, int len)
     &#123;
         if (isalpha(line[cur]))
         &#123;
-            str_tmp[str_len++] = line[cur++];
+            str_tmp[str_len++] &#x3D; line[cur++];
         &#125;
         else if (!isalpha(line[cur]))
         &#123;
 
             putstr(str_tmp, str_len);
-            str_len = 0;
+            str_len &#x3D; 0;
 
-            // printf(&quot;%s &quot;,tmp);
+            &#x2F;&#x2F; printf(&quot;%s &quot;,tmp);
             cur++;
             while (cur &lt; len &amp;&amp; !isalpha(line[cur]))
             &#123;
                 cur++;
             &#125;
-            if (cur != len)
-                fputc(&#39;/&#39;, correct);
+            if (cur !&#x3D; len)
+                fputc(&#39;&#x2F;&#39;, correct);
             else
                 fputc(&#39;\n&#39;, correct);
         &#125;
@@ -1210,27 +1238,27 @@ void cmpword(char *line, int len)
 
 void find(char *word, int len, int x, alphaT *cur)
 &#123;
-    int now = fabs(len - x - 1);
-    if (x == len &amp;&amp; cur-&gt;alpha &amp;&amp; !strcmp(cur-&gt;alpha, word))
+    int now &#x3D; fabs(len - x - 1);
+    if (x &#x3D;&#x3D; len &amp;&amp; cur-&gt;alpha &amp;&amp; !strcmp(cur-&gt;alpha, word))
     &#123;
-        res.alpha = cur-&gt;alpha;
-        res.edit_dis = 0;
+        res.alpha &#x3D; cur-&gt;alpha;
+        res.edit_dis &#x3D; 0;
         return;
     &#125;
-    else if (x &gt;= len)
+    else if (x &gt;&#x3D; len)
     &#123;
-        if (now &gt;= res.edit_dis)
+        if (now &gt;&#x3D; res.edit_dis)
             return;
         else
         &#123;
             if (cur-&gt;alpha)
                 editDis(word, cur-&gt;alpha);
-            for (int i = 0; i &lt; alphas; i++)
+            for (int i &#x3D; 0; i &lt; alphas; i++)
             &#123;
                 if (cur-&gt;next[i])
                 &#123;
                     find(word, len, x + 1, cur-&gt;next[i]);
-                    if (now &gt;= res.edit_dis)
+                    if (now &gt;&#x3D; res.edit_dis)
                         return;
                 &#125;
             &#125;
@@ -1238,8 +1266,8 @@ void find(char *word, int len, int x, alphaT *cur)
     &#125;
     else
     &#123;
-        int ptr = rechart(word[x]) % alphas;
-        for (int i = 0; i &lt; alphas; i++, ptr = (ptr + 1) % alphas)
+        int ptr &#x3D; rechart(word[x]) % alphas;
+        for (int i &#x3D; 0; i &lt; alphas; i++, ptr &#x3D; (ptr + 1) % alphas)
         &#123;
             if (cur-&gt;next[ptr])
             &#123;
@@ -1248,7 +1276,7 @@ void find(char *word, int len, int x, alphaT *cur)
                     return;
             &#125;
         &#125;
-        if (now &gt;= res.edit_dis)
+        if (now &gt;&#x3D; res.edit_dis)
             return;
         if (cur-&gt;alpha)
             editDis(word, cur-&gt;alpha);
@@ -1258,28 +1286,28 @@ void find(char *word, int len, int x, alphaT *cur)
 
 void editDis(char *word, char *voc)
 &#123;
-    int wlen = strlen(word) + 1, vlen = strlen(voc) + 1;
+    int wlen &#x3D; strlen(word) + 1, vlen &#x3D; strlen(voc) + 1;
     int **dp;
-    dp = (int **)calloc(sizeof(int *), wlen);
-    for (int i = 0; i &lt; wlen; i++)
+    dp &#x3D; (int **)calloc(sizeof(int *), wlen);
+    for (int i &#x3D; 0; i &lt; wlen; i++)
     &#123;
-        dp[i] = (int *)calloc(sizeof(int), vlen);
-        dp[i][0] = i;
+        dp[i] &#x3D; (int *)calloc(sizeof(int), vlen);
+        dp[i][0] &#x3D; i;
     &#125;
-    for (int i = 0; i &lt; vlen; i++)
-        dp[0][i] = i;
+    for (int i &#x3D; 0; i &lt; vlen; i++)
+        dp[0][i] &#x3D; i;
 
-    for (int i = 1; i &lt; wlen; i++)
+    for (int i &#x3D; 1; i &lt; wlen; i++)
     &#123;
-        for (int j = 1; j &lt; vlen; j++)
+        for (int j &#x3D; 1; j &lt; vlen; j++)
         &#123;
-            if (word[i] == voc[j])
-                dp[i][j] = min(
+            if (word[i] &#x3D;&#x3D; voc[j])
+                dp[i][j] &#x3D; min(
                     min(dp[i - 1][j] + 1,
                         dp[i][j - 1] + 1),
                     dp[i - 1][j - 1]);
             else
-                dp[i][j] = 1 + min(
+                dp[i][j] &#x3D; 1 + min(
                                    min(dp[i - 1][j],
                                        dp[i][j - 1]),
                                    dp[i - 1][j - 1]);
@@ -1287,19 +1315,18 @@ void editDis(char *word, char *voc)
     &#125;
     if (dp[wlen - 1][vlen - 1] &lt; res.edit_dis)
     &#123;
-        res.alpha = voc;
-        res.edit_dis = dp[wlen - 1][vlen - 1];
+        res.alpha &#x3D; voc;
+        res.edit_dis &#x3D; dp[wlen - 1][vlen - 1];
     &#125;
-    for (int i = 0; i &lt; wlen; i++)
+    for (int i &#x3D; 0; i &lt; wlen; i++)
     &#123;
-        if (dp[i] != NULL)
+        if (dp[i] !&#x3D; NULL)
             free(dp[i]);
     &#125;
     free(dp);
     return;
 &#125;
-</code></pre>
-
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
