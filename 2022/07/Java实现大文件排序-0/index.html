@@ -1,0 +1,1230 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Java实现大文件排序-0, 编程,绘画,阅读">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Java实现大文件排序-0 | Cromzst的博客</title>
+    <link rel="icon" type="image/png" href="/mysource/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/mysource/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Cromzst的博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/mysource/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Cromzst的博客</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/CMZSrost" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/CMZSrost" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Java实现大文件排序-0</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E7%BC%96%E7%A8%8B/">
+                                <span class="chip bg-color">编程</span>
+                            </a>
+                        
+                            <a href="/tags/Java/">
+                                <span class="chip bg-color">Java</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-07-22
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2022-07-22
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.4k
+                </div>
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="大文件排序（简介、程序要求、目录与过程心得）"><a href="#大文件排序（简介、程序要求、目录与过程心得）" class="headerlink" title="大文件排序（简介、程序要求、目录与过程心得）"></a>大文件排序（简介、程序要求、目录与过程心得）</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><hr>
+<p>这是关于学校大文件排序程序的程序文档，由于其中涉及众多模块，故分为多个文档叙述</p>
+<p>程序采用java语言，除网络流部分条件有限无法调试，其他部分均成功运行且结果正确</p>
+<p>程序大体分为五部分：</p>
+<ul>
+<li>输入并切分压缩写入</li>
+<li>建立网络连接</li>
+<li>网络流传输</li>
+<li>本地排序</li>
+<li>合并文件输出结果</li>
+</ul>
+<p>具体代码详见 github:[]</p>
+<h2 id="项目描述"><a href="#项目描述" class="headerlink" title="项目描述"></a>项目描述</h2><hr>
+<h3 id="程序要求"><a href="#程序要求" class="headerlink" title="程序要求"></a>程序要求</h3><h4 id="输入-括号内为测试用参数"><a href="#输入-括号内为测试用参数" class="headerlink" title="输入(括号内为测试用参数):"></a>输入(括号内为测试用参数):</h4><p>共8台主机，输入文件夹位置为”E:\data” (“D:\Desktop\Test\FIn”)</p>
+<p>输入文件名为”data{主机编号}.txt“</p>
+<p>每份文件大小为40G(4e10个字节)，即25亿行16字节长度的字母串(回车占1字节)</p>
+<h4 id="输出-括号内为测试用参数"><a href="#输出-括号内为测试用参数" class="headerlink" title="输出(括号内为测试用参数):"></a>输出(括号内为测试用参数):</h4><p>输出文件夹为”D:\c{班号}g{组号}m{主机编号}” (“D:\Desktop\Test\FResult\c4g1m1”)</p>
+<p>8台主机存放的对应首字母为{“abcd”,”efgh”,”ijk”,”lmn”,”opq”,”rst”,”uvw”,”xyz”}</p>
+<p>输出文件”result{单词首字母}.txt”</p>
+<h4 id="要求"><a href="#要求" class="headerlink" title="要求:"></a>要求:</h4><p>将输入文件排序,并根据单词首字母分类，通过网络流传输到对应主机中，生成输出文件</p>
+<p>在保证正确性前提下尽量提高速度</p>
+<h3 id="效率测试"><a href="#效率测试" class="headerlink" title="效率测试"></a>效率测试</h3><p>经过统计，对于1G的输入文件，各部分用时为:</p>
+<ul>
+<li><p>切分</p>
+<table>
+<thead>
+<tr>
+<th align="center">类别</th>
+<th align="center">处理量$1000行$</th>
+<th align="center">用时$ms$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">单线程</td>
+<td align="center">$1020$</td>
+<td align="center">$26,317$</td>
+</tr>
+<tr>
+<td align="center">多线程</td>
+<td align="center">$7730$</td>
+<td align="center">$26,315$</td>
+</tr>
+</tbody></table>
+<p>多线程 $62500 * 1000$ 行 用时$\space\space 233,696 ms$</p>
+<p>（线程池参数: $8 \space 18 \space 100 \space 3$）</p>
+</li>
+<li><p>排序（改进前）</p>
+<p>多线程 $9,621,615$ 行(约96M，即压缩前153M): $\space\space 149,489 ms$</p>
+</li>
+<li><p>归并（改进前）</p>
+<p>单线程IO $9,621,615$ 行(约96M，即压缩前153M): $\space\space 165,575 ms$</p>
+</li>
+<li><p>排序归并二合一（改进后）</p>
+<p>多+单线程 $9,621,615$ 行(约96M，即压缩前153M): $\space\space 151,511 ms$</p>
+</li>
+<li><p>总程序估计用时（线性增长模型）</p>
+<p>$<br>  \frac{(233696 * 40 + 151511 * 8 * 25)}{40}  = 991,251 ms \approx 0.275 h<br>$</p>
+</li>
+<li><p>预估40G用时（线性增长模型）</p>
+<p>$<br>  991,251 * 40 = 39,650,040 ms \approx 11.0 h<br>$</p>
+</li>
+</ul>
+<p>综上，程序时间花费大部分用于IO流，实际切分与排序的速度很快，因此可通过减少IO量来提高效率，然而由于条件有限，只能将网络流部分拆分，无法整合以减少IO流</p>
+<h2 id="文档结构-目录"><a href="#文档结构-目录" class="headerlink" title="文档结构(目录)"></a>文档结构(目录)</h2><hr>
+<p>sort (package)</p>
+<ol>
+<li>入口 Entry</li>
+<li>常量类<ul>
+<li>简单常量 CONST</li>
+<li>线程常量 THR</li>
+<li>网络常量 NET</li>
+<li>文件处理类 FileSL</li>
+</ul>
+</li>
+<li>流程控制类<ul>
+<li>流程枚举 ProcessState</li>
+<li>流程切换器 ProcessSwitch</li>
+<li>流程 Process<ul>
+<li>切分 Cut<ul>
+<li>压缩与解压类 Pack</li>
+<li>切分线程接口 CutterThr</li>
+<li>文件名过滤器类 AlphaFilter</li>
+</ul>
+</li>
+<li>建立网络 NetConnect<ul>
+<li>主机链接类 ServerGetter</li>
+<li>客户端链接类 ClientGetter</li>
+</ul>
+</li>
+<li>网络流 NetStream<ul>
+<li>IP文件名过滤器类 IPFilter</li>
+<li>客户端发送类 ClientS<ul>
+<li>发送线程接口 Send</li>
+</ul>
+</li>
+<li>服务端收听类 ServerS<ul>
+<li>收听线程接口 Receive</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>排序 Sort<ul>
+<li>数据入队线程接口 addL</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>初始化类<ul>
+<li>文件位置类 Files</li>
+<li>IP地址类 IP</li>
+</ul>
+</li>
+</ol>
+<h2 id="过程心得"><a href="#过程心得" class="headerlink" title="过程心得"></a>过程心得</h2><hr>
+<p>忙活了许久终于大体搞定了程序，这个过程中心态也发生了不少变化。<br>当初在学校花3、4天实现的代码能跑就已经是个奇迹，效率更不必指望，即使是现在写的程序，效率上也不如人意。</p>
+<p>不过事已至此，程序已经积重难返，继续修改所得到的经验也已经与耗费的时间精力不成正比，新技术的研究不如在新程序中进行。<br>因此这个程序，便已经是现在所能交上的尽可能完美的答卷</p>
+<p>在写这个程序的过程中，我大部分时候都在经历重复造轮子的过程，<br>但这些过程也让我收获颇丰，对IO、多线程和网络流有了更深的了解</p>
+<h3 id="IO设计的变化"><a href="#IO设计的变化" class="headerlink" title="IO设计的变化"></a>IO设计的变化</h3><p>在刚开始设计IO方式是一次读取一行<code>String</code>,将其一次切分后输出文件，然后再读取再二次切分。<br>在这个过程中，效率自然十分低下。</p>
+<p>首先是明明内存足够却要进行两次IO，耗费了大量时间在重复IO上。<br>其次每次读取都要生成一次<code>String</code>对象,生成与销毁耗费大量空间时间。<br>再者每次只读取一行，没有设置缓冲区，IO的实际效率很低</p>
+<p>之后翻阅了多线程IO的相关文献，对IO进行了改进。<br>使用<code>RandomAccessFile</code>类进行分页随机读写，用16K的字节数组作为缓冲区，开多线程进行并发读写</p>
+<p>这种设计方式相比于刚开始改进了许多，而在500M文件的测试中速度也的确很快，因此在学校中我的程序就止步于此，开始其他部分的设计</p>
+<p>然而当进入40G文件实战时，问题便显现出来了:<br>切分的速度太慢，1、2h过去都没完成。<br>而当时紧急通过python写的分割程序却能在几分钟内完成切分，<br>说明IO读完40G,时间并不需要1、2h那么多。</p>
+<p>竞赛后我才了解到:由于系统架构原因，IO流并不适合使用多线程。</p>
+<p>IO中的多线程是指用单线程IO搭配多线程处理来提高速度，如果在IO中使用多线程，<br>大量线程的上下文切换与物理指针的跳转将导致灾难般的时间消耗，<br>而在竞赛时，我设置了180条线程…</p>
+<p>放假后，我着手重构代码，保留了缓存区的设计<br>将IO部分换成了单线程读取加多线程切分的方法，速度是单线程读取并切分速度的7倍。<br>此时我的线程采用线程池的设计，<br>设置了8条核心线程与最大18条线程（当任务阻塞时，会将8条线程扩展到18条），<br>测试表明，这是效率基本最高的设置</p>
+<p>可是速度还是不如人意，根据测试1G的样本预估，<br>再次回到竞赛上效率还是太低（当然竞赛时的电脑会强很多，也许就节省了许多时间）<br>于是我开始了解nio与内存映射</p>
+<p>然而最后我还是没有采用nio与内存映射，除了程序已经积重难返与回报问题外，<br>主要原因是nio的设计高效在于缓冲区与非阻塞设计，以及多路IO的单线程实现并发<br>然而我原本的设计中已经有缓冲区的设计，而线程阻塞对我IO效率的提升也并不显著，<br>多路IO的单线程并发更适合用在网络流部分。<br>而内存映射单纯只是回报不足，但经过理论估计，应该能给程序提速一倍或者更多（以大量内存为代价）</p>
+<h3 id="多线程结构设计"><a href="#多线程结构设计" class="headerlink" title="多线程结构设计"></a>多线程结构设计</h3><p>原本我的线程设计是写继承<code>Thread</code>类的类，没有采用线程池，<br>并且手动管理线程的结束，同时线程数一次性开一百来个…</p>
+<p>很显然，效率很低。多线程的效率面临上下文切换、内存问题和阻塞\死锁问题。<br>一百来个线程的上下文切换开销很大，同时阻塞问题也很严重，在校调试时便很常见<br>继承Thread类且不采用线程池的设计导致了大量线程的重复生成与销毁造成了严重的浪费</p>
+<p>了解到更多线程的效率问题后，当我重构代码时，我对线程的设计就相对谨慎了。</p>
+<p>我首先采用了线程池，将其的生成封装为了工厂，<br>线程采用重写Runnable接口的方法，提高了线程资源的复用率，再调整了线程数量。<br>然而刚开始经常遇到抛出任务提交失败的异常，然后才发现任务太多，<br>而线程池的默认提交方式是非阻塞式的，我也没有对异常进行处理。<br>于是将提交方式换成阻塞式，同时让异常的任务重新提交便解决了</p>
+<p>然后我遇到了等待线程池结束的问题。线程池并没有提供现成的结束方法。<br>刚开始我采用全局变量搭配人为的死循环来进行控制，然而由于死锁原因，数据经常被锁定且数值异常。<br>中间采用了许多方法，最后我通过判断线程池当前核心线程数和线程池任务队列长度来判断是否已全部完成。<br>顺便也写了判断是否适合添加新任务的的方法</p>
+<h3 id="网络流设计与测试方法"><a href="#网络流设计与测试方法" class="headerlink" title="网络流设计与测试方法"></a>网络流设计与测试方法</h3><p>在校时，网络流部分是我耗费时间最长，测试难度最大，同时也是成果最差的部分。</p>
+<p>首先是建立网络链接部分，为了效率肯定是8台主机同时建立收-发链接，<br>这也导致了每台主机都需要知道所有主机的IP，而当测试环境变化时，IP部分也要更改。<br>但这都只是小问题，写一个读取IP文件的方法即可。</p>
+<p>问题在于当主机数量变动时，当时主机数量与对应字符串是写在一个单独的常量类中，<br>主机数量变动，就需要更改许多数值，引发了许多耗时的Bug。</p>
+<p>第二个问题也很明显，宿舍没法进行测试，实验室分配主机网络分布不连贯，<br>导致测试环节变成体力活，而且eclipse对代码刷新不及时，导致许多已解决的新Bug。<br>测试的高压让我没法冷静写入新功能</p>
+<p>重构代码后，我吸取教训，设计了<code>FileSL</code>类来封装对配置文件的读取与新文件的生成，<br>又设计了分配方法来自动根据主机数分配字符串，设计了<code>Files</code>类来封装配置文件。<br>如果当时早早设计出这些辅助类，能节省很多时间。</p>
+<p>网络传输的部分最开始的结构是通过阻塞队列的生产者-消费者模型来实现</p>
+<p><code>读取</code>-<code>切分</code>-<code>发送阻塞队列</code>-<code>网络IO</code>-<code>收听阻塞队列</code>-<code>写入</code>-<code>本地操作</code></p>
+<p>的程序结构，结构其实效率不错，尽可能减少了IO量，尽管最开始阻塞队列里装的还是<code>String</code>，<br>后面对IO优化后也换成了字节数组，过程也的确可行。</p>
+<p>然而，测试时不断debug，最后仍有错误判断没解决，<br>因为当时该bug对结果文件没啥显著影响，时间紧迫，便暂时放在一边。<br>重构代码时才发现这个问题所在。</p>
+<p>这个问题是网络流传输中的结束符问题。<br>原本的设计中，线程的结束是靠结束符来解决，而结束符是一行16字节的常量字符串。<br>这种设计在读取-发送，收听-写入阶段能很好地结束线程，<br>因为阻塞队列里16K大小的字节数组和16大小的字节数组都占一个元素（量子化）。<br>（当时还不知道对字节进行压缩）</p>
+<p>然而在发送-收听阶段，Bug便出现了。<br>网络流的传输是字节流，设计的IO方式是一次取队列中的一个元素发送给主机，<br>收听时读取定长数组，一次就往队列中塞一个元素。<br>然而在字节流中，字节数组不再量子化，而每次读取都是读取定长字节数，这导致结束符的错误断开。<br>那么把结束符的大小设置为16K即可？然而在阻塞队列中的字节数组只能保证长度是16的倍数，<br>因为文件读取的末尾会读取到不满16K大小的字节数组。</p>
+<p>解决办法是规范传输大小，规定每次只传输16K大小的包，即使不满16K，也要填充到16K大小。<br>并且在结束时发送空的16K包作为结束符</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>还有一些比较琐碎的设计，比如压缩字节，但实际上这个灵感是竞赛时某个组的大佬搞出来的，<br>我只是重构时使用了。他们组采用AIO异步并发发送并结合File Level合并的方法的确很高效。<br>（不过由于我网络流部分没有大量重构，所以重构时并没有设计。）<br>不管怎么说，他们组用到的技术绝对不可能是单纯靠一周学语言，四天写代码就能搞定的，<br>必定是组里有大佬（好像就是他们组长）。<br>因为其中用到的技术很契合项目要求，基本可以说是最优解了，这点时间根本不够从头开始构思。</p>
+<p>还有状态模式，这也是重构时增加的设计（是设计模式中的一种）。<br>因为测试和竞赛时，有时候需要中断程序重新开始，<br>但是已经完成的部分直接抛弃很浪费时间，<br>所以用状态模式来即时调整流程。再用枚举来管理流程。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这次竞赛和重构的确让我学到了许多，也的确是一段高压的难忘经历，复杂程度是我目前最高的项目。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Cromzst</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://cromzst.gitee.io/2022/07/Java%E5%AE%9E%E7%8E%B0%E5%A4%A7%E6%96%87%E4%BB%B6%E6%8E%92%E5%BA%8F-0/">https://cromzst.gitee.io/2022/07/Java%E5%AE%9E%E7%8E%B0%E5%A4%A7%E6%96%87%E4%BB%B6%E6%8E%92%E5%BA%8F-0/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">Cromzst</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E7%BC%96%E7%A8%8B/">
+                                    <span class="chip bg-color">编程</span>
+                                </a>
+                            
+                                <a href="/tags/Java/">
+                                    <span class="chip bg-color">Java</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2022/07/Java%E5%AE%9E%E7%8E%B0%E5%A4%A7%E6%96%87%E4%BB%B6%E6%8E%92%E5%BA%8F-1/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Java实现大文件排序-1">
+                        
+                        <span class="card-title">Java实现大文件排序-1</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            大文件排序 （入口，常量类与初始化类）
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-07-22
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Cromzst
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%BC%96%E7%A8%8B/">
+                        <span class="chip bg-color">编程</span>
+                    </a>
+                    
+                    <a href="/tags/Java/">
+                        <span class="chip bg-color">Java</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/12/%E5%8D%95%E8%AF%8D%E7%BA%A0%E9%94%99/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="单词纠错">
+                        
+                        <span class="card-title">单词纠错</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-06
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Cromzst
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E7%BC%96%E7%A8%8B/">
+                        <span class="chip bg-color">编程</span>
+                    </a>
+                    
+                    <a href="/tags/C-C/">
+                        <span class="chip bg-color">C\C++</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="song"
+                   id="1341800295"
+                   fixed='true'
+                   autoplay='true'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2021-2022</span>
+            
+            <span id="year">2021</span>
+            <a href="/about" target="_blank">Cromzst</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/CMZSrost" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
