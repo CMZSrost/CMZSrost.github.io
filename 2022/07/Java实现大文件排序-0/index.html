@@ -438,14 +438,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-07-22
+                    2022-07-24
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.5k
+                    3.6k
                 </div>
                 
 
@@ -500,6 +500,35 @@
 <p>在保证正确性前提下尽量提高速度</p>
 <h3 id="效率测试"><a class="markdownIt-Anchor" href="#效率测试"></a> 效率测试</h3>
 <p>经过统计，对于1G的输入文件，各部分用时为:</p>
+<ul>
+<li>读写（只写只读）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">类别</th>
+<th style="text-align:center">处理量<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1000</mn><mi mathvariant="normal">行</mi></mrow><annotation encoding="application/x-tex">1000行</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span><span class="mord cjk_fallback">行</span></span></span></span></th>
+<th style="text-align:center">用时<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">ms</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">s</span></span></span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">java（带16k缓存）</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>62500</mn></mrow><annotation encoding="application/x-tex">62500</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord">2</span><span class="mord">5</span><span class="mord">0</span><span class="mord">0</span></span></span></span></td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mo separator="true">,</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">2,5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">5</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">java（逐行）</td>
+<td style="text-align:center">/</td>
+<td style="text-align:center">极高</td>
+</tr>
+<tr>
+<td style="text-align:center">python（逐行？）</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>62500</mn></mrow><annotation encoding="application/x-tex">62500</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord">2</span><span class="mord">5</span><span class="mord">0</span><span class="mord">0</span></span></span></span></td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>28</mn><mo separator="true">,</mo><mn>315</mn></mrow><annotation encoding="application/x-tex">28,315</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">2</span><span class="mord">8</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">3</span><span class="mord">1</span><span class="mord">5</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
 <ul>
 <li>切分</li>
 </ul>
@@ -656,7 +685,8 @@
 主要原因是nio的设计高效在于缓冲区与非阻塞设计，以及多路IO的单线程实现并发<br />
 然而我原本的设计中已经有缓冲区的设计，而线程阻塞对我IO效率的提升也并不显著，<br />
 多路IO的单线程并发更适合用在网络流部分。<br />
-而内存映射单纯只是回报不足，但经过理论估计，应该能给程序提速一倍或者更多（以大量内存为代价）</p>
+而内存映射单纯只是回报不足，但经过理论估计，应该能给程序提速一倍或者更多（以大量内存为代价）<br />
+（后续：经测试，瓶颈不在IO，而在逐行处理的速度上）</p>
 <h3 id="多线程结构设计"><a class="markdownIt-Anchor" href="#多线程结构设计"></a> 多线程结构设计</h3>
 <p>原本我的线程设计是写继承<code>Thread</code>类的类，没有采用线程池，<br />
 并且手动管理线程的结束，同时线程数一次性开一百来个…</p>
